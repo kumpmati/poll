@@ -50,6 +50,7 @@
 
 <style>
 	h1 {
+		font-family: 'Urbanist';
 		margin-top: 8rem;
 		font-size: 4rem;
 		font-weight: 400;

@@ -16,6 +16,7 @@
 
 <style>
 	h1 {
+		font-family: 'Urbanist';
 		font-size: 5rem;
 		font-weight: 400;
 	}

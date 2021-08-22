@@ -60,6 +60,7 @@
 
 <style>
 	h1 {
+		font-family: 'Urbanist';
 		margin-top: 8rem;
 	}
 
@@ -70,6 +71,7 @@
 	}
 
 	.subtitle h2 {
+		font-family: 'Urbanist';
 		margin-right: 1rem;
 	}
 
