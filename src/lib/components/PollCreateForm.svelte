@@ -27,6 +27,8 @@
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
 
+		if (title.trim() === '') return;
+
 		if (newOption.trim() !== '') {
 			options = [...options, { id: Date.now().toString(), text: newOption }];
 			newOption = '';
@@ -47,14 +49,22 @@
 </script>
 
 <form>
-	<input type="text" class="big" required bind:value={title} placeholder="Type your title here" />
+	<input
+		type="text"
+		class="big"
+    required
+		bind:value={title}
+		placeholder="Type your title here"
+	/>
 
 	<h2>Options</h2>
 	<ul>
 		{#each options as { id, text } (id)}
 			<li>
 				<input type="text" class="text-input" bind:value={text} />
-				<button class="delete" on:click={() => handleDeleteOption(id)}><Trash /></button>
+				<button class="delete" type="button" on:click={() => handleDeleteOption(id)}
+					><Trash /></button
+				>
 			</li>
 		{/each}
 
@@ -68,7 +78,7 @@
 		</li>
 	</ul>
 
-	<button class="submit" on:click={handleSubmit}>Create poll<Plus /></button>
+	<button type="submit" class="submit" on:click={handleSubmit}>Create poll<Plus /></button>
 </form>
 
 <style>
