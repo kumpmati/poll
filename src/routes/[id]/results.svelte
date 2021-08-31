@@ -17,25 +17,55 @@
 </script>
 
 <script lang="ts">
-	import type { Poll } from '$lib/types/poll';
+	import type { Answer, Poll } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
+	import { onMount } from 'svelte';
 
 	export let id: string;
 	export let poll: Poll;
 
-	const distribution = calculateStats(poll);
+	$: distribution = calculateStats(poll);
 	const getPercentage = (id: string) => {
-		let amount = (distribution[id] / distribution['total']) * 100;
+		let amount = (distribution[id] / distribution['totalSubmissionOptions']) * 100;
 
 		return isNaN(amount) ? 0 : amount;
 	};
+
+	onMount(() => {
+		const ws = new WebSocket(`ws://localhost:9001/poll/ws/${id}`);
+
+		ws.addEventListener('open', () => console.log('connected'));
+
+		ws.addEventListener('message', (d) => {
+			const data = JSON.parse(d.data); // either the full poll or just a single new answer
+
+			if ('answers' in data) {
+				const newPoll = data as Poll;
+
+				poll = newPoll;
+			} else if ('submitted' in data) {
+				const answer = data as Answer;
+
+				// prevent possible duplicate answers
+				if (!poll.answers.some((a) => a.id === answer.id)) {
+					poll.answers.push(answer);
+					poll = poll;
+				}
+			}
+		});
+
+		() => {
+			console.log('disconnecting');
+			ws.close();
+		};
+	});
 </script>
 
 <h1>{poll.title}</h1>
 
 <div class="subtitle">
 	<h2>Results</h2>
-	<p>({distribution['total']} answers)</p>
+	<p>({distribution['totalSubmissions']} answers)</p>
 </div>
 
 <ul>
@@ -128,6 +158,7 @@
 		display: block;
 		height: 1rem;
 		border-radius: 0.25rem;
-		background: #88f;
+		background: rgb(71, 116, 158);
+		transition: width 200ms;
 	}
 </style>
