@@ -32,7 +32,7 @@
 	};
 
 	onMount(() => {
-		const ws = new WebSocket(`ws://localhost:9001/poll/ws/${id}`);
+		const ws = new WebSocket(`${import.meta.env.VITE_PUBLIC_WS_URL}/${id}`);
 
 		ws.addEventListener('open', () => console.log('connected'));
 
