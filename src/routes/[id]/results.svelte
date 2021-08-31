@@ -158,6 +158,7 @@
 		display: block;
 		height: 1rem;
 		border-radius: 0.25rem;
-		background: #88f;
+		background: rgb(71, 116, 158);
+		transition: width 200ms;
 	}
 </style>
