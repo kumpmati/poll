@@ -1,7 +1,12 @@
 import type { Poll } from '$lib/types/poll';
 
-export const calculateStats = (poll: Poll): Record<string, number> => {
-	const stats = {
+export type Stats = Record<string, number> & {
+	totalSubmissions: number;
+	totalSubmissionOptions: number;
+};
+
+export const calculateStats = (poll: Poll): Stats => {
+	const stats: Stats = {
 		totalSubmissions: poll.answers.length,
 		totalSubmissionOptions: 0
 	};

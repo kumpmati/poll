@@ -8,57 +8,33 @@
 		if (!poll) return;
 
 		return {
-			props: {
-				id,
-				poll
-			}
+			props: { poll }
 		};
 	};
 </script>
 
 <script lang="ts">
-	import type { Answer, Poll } from '$lib/types/poll';
+	import type { Poll } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
 	import { onMount } from 'svelte';
-	import { variables } from '$lib/utils/env';
+	import { connectWebSocket } from '$lib/utils/websocket';
+	import Results from '$lib/components/Results/Results.svelte';
 
-	export let id: string;
 	export let poll: Poll;
 
-	$: distribution = calculateStats(poll);
-	const getPercentage = (id: string) => {
-		let amount = (distribution[id] / distribution['totalSubmissionOptions']) * 100;
-
-		return isNaN(amount) ? 0 : amount;
-	};
+	// stats update when poll updates
+	$: stats = calculateStats(poll);
 
 	onMount(() => {
-		const ws = new WebSocket(`${variables.WS_URL}/${id}`);
+		const { answers, initial } = connectWebSocket(poll);
 
-		ws.addEventListener('open', () => console.log('connected'));
+		initial.subscribe((value) => void (poll = value));
 
-		ws.addEventListener('message', (d) => {
-			const data = JSON.parse(d.data); // either the full poll or just a single new answer
-
-			if ('answers' in data) {
-				const newPoll = data as Poll;
-
-				poll = newPoll;
-			} else if ('submitted' in data) {
-				const answer = data as Answer;
-
-				// prevent possible duplicate answers
-				if (!poll.answers.some((a) => a.id === answer.id)) {
-					poll.answers.push(answer);
-					poll = poll;
-				}
+		answers.subscribe((answer) => {
+			if (answer && !poll.answers.some((a) => a.id === answer.id)) {
+				poll.answers = [...poll.answers, answer];
 			}
 		});
-
-		() => {
-			console.log('disconnecting');
-			ws.close();
-		};
 	});
 </script>
 
@@ -66,28 +42,12 @@
 
 <div class="subtitle">
 	<h2>Results</h2>
-	<p>({distribution['totalSubmissions']} answers)</p>
+	<p>{stats.totalSubmissions} answers</p>
 </div>
 
-<ul>
-	{#each poll.options as opt (opt.id)}
-		<li>
-			<div class="details">
-				<p class="text">
-					{opt.text}
-				</p>
+<Results {poll} {stats} />
 
-				<p class="percentage">
-					{getPercentage(opt.id).toFixed(0)}%
-				</p>
-			</div>
-
-			<div class="bar" style={`width: ${getPercentage(opt.id)}%`} />
-		</li>
-	{/each}
-</ul>
-
-<a href={`/${id}`}>Submit again</a>
+<a href={`/${poll.id}`}>Submit again</a>
 
 <style>
 	h1 {
@@ -98,6 +58,7 @@
 	.subtitle {
 		display: flex;
 		align-items: baseline;
+		justify-content: space-between;
 		color: #333;
 	}
 
@@ -107,7 +68,7 @@
 	}
 
 	.subtitle p {
-		color: #888;
+		color: #555;
 	}
 
 	h1 {
@@ -115,51 +76,22 @@
 		font-weight: 400;
 	}
 
-	ul {
-		list-style: none;
-		color: #333;
-		padding: 0;
-	}
-
 	p {
 		margin: 0;
 	}
 
 	a {
+		font-weight: 800;
 		text-decoration: none;
+		padding: 0.5rem 1rem;
+		border-radius: 0.25rem;
 		color: #555;
+		background: #eee;
 	}
 
 	a:hover {
-		color: #000;
-	}
-
-	li {
-		margin-bottom: 2rem;
-	}
-
-	.details {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.text {
-		font-size: 1.35rem;
-		margin: 0;
-		margin-bottom: 0.5rem;
-	}
-
-	.percentage {
-		margin-left: 1rem;
-		color: #555;
-	}
-
-	.bar {
-		display: block;
-		height: 1rem;
-		border-radius: 0.25rem;
-		background: rgb(71, 116, 158);
-		transition: width 200ms;
+		cursor: pointer;
+		color: #333;
+		background: #ddd;
 	}
 </style>

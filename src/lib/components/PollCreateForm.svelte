@@ -13,7 +13,10 @@
 	let shiftPressed = false;
 
 	const handleNewOption = (e: any) => {
+		// ignore normal keypresses
 		if ((e.code !== 'Enter' && e.code !== 'Tab') || shiftPressed || newOption.trim() === '') return;
+
+		// don't submit form
 		e.preventDefault();
 
 		options = [...options, { id: Date.now().toString(), text: newOption }];
@@ -49,22 +52,16 @@
 </script>
 
 <form>
-	<input
-		type="text"
-		class="big"
-    required
-		bind:value={title}
-		placeholder="Type your title here"
-	/>
+	<input type="text" class="big" required bind:value={title} placeholder="Type your title here" />
 
 	<h2>Options</h2>
 	<ul>
 		{#each options as { id, text } (id)}
 			<li>
 				<input type="text" class="text-input" bind:value={text} />
-				<button class="delete" type="button" on:click={() => handleDeleteOption(id)}
-					><Trash /></button
-				>
+				<button class="delete" type="button" on:click={() => handleDeleteOption(id)}>
+					<Trash />
+				</button>
 			</li>
 		{/each}
 
