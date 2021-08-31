@@ -20,6 +20,7 @@
 	import type { Answer, Poll } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
 	import { onMount } from 'svelte';
+	import { variables } from '$lib/utils/env';
 
 	export let id: string;
 	export let poll: Poll;
@@ -32,7 +33,7 @@
 	};
 
 	onMount(() => {
-		const ws = new WebSocket(`${import.meta.env.VITE_PUBLIC_WS_URL}/${id}`);
+		const ws = new WebSocket(`${variables.WS_URL}/${id}`);
 
 		ws.addEventListener('open', () => console.log('connected'));
 
