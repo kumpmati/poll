@@ -19,6 +19,7 @@
 <script lang="ts">
 	import type { Poll } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
+	import { onMount } from 'svelte';
 
 	export let id: string;
 	export let poll: Poll;
@@ -29,6 +30,19 @@
 
 		return isNaN(amount) ? 0 : amount;
 	};
+
+	onMount(() => {
+		console.log('asdasd');
+		const ws = new WebSocket(`ws://localhost:9001/poll/ws/${id}`);
+
+		ws.addEventListener('open', () => console.log('connected'));
+		ws.addEventListener('message', (d) => {
+			const data = JSON.parse(d.data);
+			console.log('new data');
+			poll.answers.push(data);
+			poll = poll;
+		});
+	});
 </script>
 
 <h1>{poll.title}</h1>
