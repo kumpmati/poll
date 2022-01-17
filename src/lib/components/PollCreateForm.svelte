@@ -8,7 +8,7 @@
 	const dispatch = createEventDispatcher();
 
 	let title: string = '';
-	let options: Option[] = [{ id: Date.now().toString(), text: null }];
+	let options: Option[] = [];
 
 	const handleNewOption = () => {
 		options = [...options, { id: Date.now().toString(), text: '' }];
@@ -134,7 +134,7 @@
 
 	li {
 		list-style: none;
-		margin-bottom: 0.5rem;
+		margin-bottom: 1rem;
 		display: flex;
 		position: relative;
 	}
