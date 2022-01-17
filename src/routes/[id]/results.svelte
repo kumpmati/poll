@@ -22,8 +22,6 @@
 
 	export let poll: Poll;
 
-	let hasSubmitted: boolean = false;
-
 	// stats update when poll updates
 	$: stats = calculateStats(poll);
 
@@ -38,8 +36,6 @@
 				poll.answers = [...poll.answers, answer];
 			}
 		});
-
-		hasSubmitted = !!localStorage.getItem(`poll-${poll.id}`);
 	});
 </script>
 
@@ -53,9 +49,7 @@
 <Results {poll} {stats} />
 
 <div class="controls">
-	{#if !hasSubmitted || poll.allowMultipleAnswers}
-		<a href={`/${poll.id}`} class="button">Back</a>
-	{/if}
+	<a href={`/${poll.id}`} class="button">Back</a>
 </div>
 
 <style>
