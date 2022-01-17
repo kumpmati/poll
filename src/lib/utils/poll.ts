@@ -1,5 +1,4 @@
 import type { Answer, Poll } from '$lib/types/poll';
-import { nanoid } from 'nanoid';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 

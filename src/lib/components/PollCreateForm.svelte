@@ -51,7 +51,7 @@
 		if (title.trim() === '') return;
 
 		const hasEmptyOptions = options.some((opt) => opt.text.trim() === '');
-		if (!hasEmptyOptions) return;
+		if (hasEmptyOptions) return;
 
 		const poll: PartialPoll = {
 			title,
