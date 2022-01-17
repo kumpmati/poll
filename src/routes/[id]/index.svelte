@@ -22,6 +22,7 @@
 	import RadioGroup from '$lib/components/form/RadioGroup.svelte';
 	import CheckboxGroup from '$lib/components/form/CheckboxGroup.svelte';
 	import { browser } from '$app/env';
+	import { nanoid } from 'nanoid';
 
 	export let id: string;
 	export let poll: Poll;
@@ -41,12 +42,16 @@
 
 		if (!canSubmit) return;
 
-		const response = await submitAnswer(id, selections);
-		if (response.id) {
-			// save time when poll was submitted into local storage
-			localStorage.setItem(`poll-${id}`, new Date().toString());
+		// either get existing answer id for this poll or generate new one
+		const userId = localStorage.getItem(`poll-${id}`) || nanoid();
+
+		const response = await submitAnswer(id, selections, userId);
+		if (response) {
+			// save the answer id to local storage for future use in this poll
+			localStorage.setItem(`poll-${id}`, userId);
+
 			// navigate to results page
-			await goto(`${response.id}/results`);
+			await goto(`${id}/results`);
 		}
 	};
 </script>

@@ -32,6 +32,7 @@
 
 		initial.subscribe((value) => void (poll = value));
 
+		// update poll when new data is received
 		answers.subscribe((answer) => {
 			if (answer && !poll.answers.some((a) => a.id === answer.id)) {
 				poll.answers = [...poll.answers, answer];

@@ -50,13 +50,14 @@
 
 		if (title.trim() === '') return;
 
-		const optionsHaveContent = options.every((opt) => opt.text.trim() !== '');
-		if (!optionsHaveContent) return;
+		const hasEmptyOptions = options.some((opt) => opt.text.trim() === '');
+		if (!hasEmptyOptions) return;
 
 		const poll: PartialPoll = {
 			title,
 			options,
 			allowMultipleAnswers,
+			// use max choices when in multiple choice mode, otherwise use 1
 			maxChoices: multipleChoice ? maxChoices : 1
 		};
 		dispatch('submit', poll);
