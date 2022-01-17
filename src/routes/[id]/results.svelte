@@ -47,12 +47,21 @@
 
 <Results {poll} {stats} />
 
-<a href={`/${poll.id}`}>Submit again</a>
+<a href={`/${poll.id}`} class="button">Back</a>
 
 <style>
 	h1 {
 		font-family: 'Urbanist';
+		font-size: 4rem;
 		margin-top: 8rem;
+		word-wrap: break-word;
+		hyphens: auto;
+	}
+
+	@media screen and (max-width: 700px) {
+		h1 {
+			font-size: 2.5rem !important;
+		}
 	}
 
 	.subtitle {
@@ -80,16 +89,21 @@
 		margin: 0;
 	}
 
-	a {
-		font-weight: 800;
-		text-decoration: none;
-		padding: 0.5rem 1rem;
+	.button {
+		appearance: none;
+		margin-top: 1rem;
+		font-size: 1.35rem;
+		font-family: inherit;
+		border: none;
 		border-radius: 0.25rem;
+		padding: 0.75rem 1.5rem;
 		color: #555;
 		background: #eee;
+		text-decoration: none;
+		text-align: center;
 	}
 
-	a:hover {
+	.button:hover {
 		cursor: pointer;
 		color: #333;
 		background: #ddd;

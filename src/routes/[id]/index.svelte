@@ -45,7 +45,10 @@
 		{/each}
 	</ul>
 
-	<input type="submit" class="submit" />
+	<div class="controls">
+		<input type="submit" class="button big" value="Submit" />
+		<a class="button" href={`${id}/results`}>Results</a>
+	</div>
 </form>
 
 <style>
@@ -54,6 +57,12 @@
 		margin-top: 8rem;
 		font-size: 4rem;
 		font-weight: 400;
+	}
+
+	@media screen and (max-width: 700px) {
+		h1 {
+			font-size: 2.5rem;
+		}
 	}
 
 	ul {
@@ -82,20 +91,33 @@
 		margin-right: 0.5rem;
 	}
 
-	.submit {
+	.controls {
+		margin-top: 3rem;
+		display: flex;
+		gap: 1rem;
+	}
+
+	.button {
+		appearance: none;
 		margin-top: 1rem;
 		font-size: 1.35rem;
-		appearance: none;
+		font-family: inherit;
 		border: none;
 		border-radius: 0.25rem;
 		padding: 0.75rem 1.5rem;
 		color: #555;
 		background: #eee;
+		text-decoration: none;
+		text-align: center;
 	}
 
-	.submit:hover {
+	.button:hover {
 		cursor: pointer;
 		color: #333;
 		background: #ddd;
+	}
+
+	.big {
+		padding: 0.75rem 4rem;
 	}
 </style>

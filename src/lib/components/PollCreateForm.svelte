@@ -1,26 +1,17 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import type { Option } from '$lib/types/poll';
 	import Plus from './Icons/plus.svelte';
 	import Trash from './Icons/trash.svelte';
+	import { flip } from 'svelte/animate';
 
 	const dispatch = createEventDispatcher();
 
 	let title: string = '';
-	let options: Option[] = [];
-	let newOption: string = '';
+	let options: Option[] = [{ id: Date.now().toString(), text: null }];
 
-	let shiftPressed = false;
-
-	const handleNewOption = (e: any) => {
-		// ignore normal keypresses
-		if ((e.code !== 'Enter' && e.code !== 'Tab') || shiftPressed || newOption.trim() === '') return;
-
-		// don't submit form
-		e.preventDefault();
-
-		options = [...options, { id: Date.now().toString(), text: newOption }];
-		newOption = '';
+	const handleNewOption = () => {
+		options = [...options, { id: Date.now().toString(), text: '' }];
 	};
 
 	const handleDeleteOption = (id: string) => {
@@ -32,23 +23,12 @@
 
 		if (title.trim() === '') return;
 
-		if (newOption.trim() !== '') {
-			options = [...options, { id: Date.now().toString(), text: newOption }];
-			newOption = '';
-		}
+		const optionsHaveContent = options.every((opt) => opt.text.trim() !== '');
+
+		if (!optionsHaveContent) return;
 
 		dispatch('submit', { title, options });
 	};
-
-	onMount(() => {
-		document.addEventListener('keydown', (e) => {
-			if (e.code === 'ShiftLeft') shiftPressed = true;
-		});
-
-		document.addEventListener('keyup', (e) => {
-			if (e.code === 'ShiftLeft') shiftPressed = false;
-		});
-	});
 </script>
 
 <form>
@@ -56,26 +36,29 @@
 
 	<h2>Options</h2>
 	<ul>
-		{#each options as { id, text } (id)}
+		{#each options as { id, text }, index (id)}
 			<li>
-				<input type="text" class="text-input" bind:value={text} />
+				<input
+					required
+					type="text"
+					class="text-input"
+					bind:value={text}
+					placeholder={`Option ${index + 1}`}
+					on:keyup|preventDefault
+				/>
+
 				<button class="delete" type="button" on:click={() => handleDeleteOption(id)}>
 					<Trash />
 				</button>
 			</li>
 		{/each}
 
-		<li class="new-option">
-			<input
-				type="text"
-				bind:value={newOption}
-				placeholder="Option text here"
-				on:keydown={handleNewOption}
-			/>
-		</li>
+		<button class="button wide" on:submit|preventDefault on:click={handleNewOption}>
+			Add option<Plus />
+		</button>
 	</ul>
 
-	<button type="submit" class="submit" on:click={handleSubmit}>Create poll<Plus /></button>
+	<button type="submit" class="button submit" on:click={handleSubmit}>Create poll</button>
 </form>
 
 <style>
@@ -94,27 +77,35 @@
 		font-size: 1.35rem;
 	}
 
-	.submit {
+	.button {
 		font-size: 1.125rem;
 		appearance: none;
 		border: none;
 		border-radius: 0.25rem;
 		padding: 1rem 2rem;
-		padding-right: 1.5rem;
 		width: fit-content;
 		display: flex;
+		justify-content: center;
 		align-items: center;
 		gap: 0.5rem;
 		color: #555;
 	}
 
-	.submit:hover {
+	.button:hover {
 		background: #ddd;
 		border-color: #ddd;
 		cursor: pointer;
 	}
 
-	input {
+	.button.wide {
+		width: 100%;
+	}
+
+	.button.submit {
+		margin-top: 3rem;
+	}
+
+	input[type='text'] {
 		font-size: 1.125rem;
 		width: 100%;
 		padding: 1em;
@@ -122,12 +113,19 @@
 		border: 2px solid #eee;
 		border-radius: 0.25rem;
 		background: #eee;
+
+		transition: box-shadow 100ms;
 	}
 
-	input:focus {
+	input[type='text']:focus {
 		outline: none;
 		border-color: #888;
 		background: #fff;
+	}
+
+	input[type='text']:invalid {
+		border-color: rgb(255, 88, 88);
+		box-shadow: 0 0 0 5px rgb(255, 194, 194);
 	}
 
 	ul {
