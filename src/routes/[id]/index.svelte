@@ -19,34 +19,59 @@
 <script lang="ts">
 	import type { Poll } from '$lib/types/poll';
 	import { goto } from '$app/navigation';
+	import RadioGroup from '$lib/components/form/RadioGroup.svelte';
+	import CheckboxGroup from '$lib/components/form/CheckboxGroup.svelte';
+	import { browser } from '$app/env';
 
 	export let id: string;
 	export let poll: Poll;
+
 	let selections: string[] = [];
+	let canSubmit: boolean = false;
+
+	$: {
+		if (browser) {
+			const hasSubmitted = localStorage.getItem(`poll-${id}`);
+			canSubmit = poll.allowMultipleAnswers || !hasSubmitted;
+		}
+	}
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		if (!canSubmit) return;
+
 		const response = await submitAnswer(id, selections);
-		if (response.id) goto(`${response.id}/results`);
+		if (response.id) {
+			// save time when poll was submitted into local storage
+			localStorage.setItem(`poll-${id}`, new Date().toString());
+			// navigate to results page
+			await goto(`${response.id}/results`);
+		}
 	};
 </script>
 
 <h1>{poll.title}</h1>
 
 <form on:submit={handleSubmit}>
-	<ul>
-		{#each poll.options as option (option.id)}
-			<li>
-				<label>
-					<input type="checkbox" bind:group={selections} value={option.id} />
-					{option.text}
-				</label>
-			</li>
-		{/each}
-	</ul>
+	{#if poll.maxChoices === 1}
+		<RadioGroup options={poll.options} bind:selection={selections} />
+	{:else}
+		<CheckboxGroup
+			maxChoices={poll.maxChoices}
+			options={poll.options}
+			bind:selection={selections}
+		/>
+	{/if}
 
 	<div class="controls">
-		<input type="submit" class="button big" value="Submit" />
+		<input
+			type="submit"
+			class="button big"
+			value="Submit"
+			disabled={!canSubmit}
+			title={!canSubmit ? 'Already submitted' : ''}
+		/>
 		<a class="button" href={`${id}/results`}>Results</a>
 	</div>
 </form>
@@ -63,32 +88,6 @@
 		h1 {
 			font-size: 2.5rem;
 		}
-	}
-
-	ul {
-		padding: 0;
-		list-style: none;
-	}
-
-	li {
-		margin-bottom: 0.5rem;
-	}
-
-	label {
-		display: flex;
-		align-items: center;
-		font-size: 1.35rem;
-		padding: 0.5rem;
-		padding-left: 0;
-		width: 100%;
-		border-radius: 0.25rem;
-	}
-
-	label > input {
-		width: 1.5rem;
-		min-width: 1.5rem;
-		height: 1.5rem;
-		margin-right: 0.5rem;
 	}
 
 	.controls {
@@ -111,7 +110,12 @@
 		text-align: center;
 	}
 
-	.button:hover {
+	.button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.button:not(:disabled):hover {
 		cursor: pointer;
 		color: #333;
 		background: #ddd;

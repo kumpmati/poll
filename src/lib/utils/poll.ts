@@ -2,13 +2,14 @@ import type { Answer, Poll } from '$lib/types/poll';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-type PartialPoll = Pick<Poll, 'title' | 'options' | 'maxChoices'>;
+export type PartialPoll = Pick<Poll, 'title' | 'options' | 'maxChoices' | 'allowMultipleAnswers'>;
 
 export const createPoll = async (poll: PartialPoll): Promise<Poll> => {
 	const newPoll: Poll = {
 		...poll,
+
+		// override these values
 		id: '',
-		allowMultipleAnswers: true,
 		answers: [],
 		created: new Date(),
 		requireAuth: false

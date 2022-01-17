@@ -22,6 +22,8 @@
 
 	export let poll: Poll;
 
+	let hasSubmitted: boolean = false;
+
 	// stats update when poll updates
 	$: stats = calculateStats(poll);
 
@@ -35,6 +37,8 @@
 				poll.answers = [...poll.answers, answer];
 			}
 		});
+
+		hasSubmitted = !!localStorage.getItem(`poll-${poll.id}`);
 	});
 </script>
 
@@ -47,7 +51,11 @@
 
 <Results {poll} {stats} />
 
-<a href={`/${poll.id}`} class="button">Back</a>
+<div class="controls">
+	{#if !hasSubmitted || poll.allowMultipleAnswers}
+		<a href={`/${poll.id}`} class="button">Back</a>
+	{/if}
+</div>
 
 <style>
 	h1 {
@@ -89,9 +97,12 @@
 		margin: 0;
 	}
 
+	.controls {
+		margin-top: 5rem;
+	}
+
 	.button {
 		appearance: none;
-		margin-top: 1rem;
 		font-size: 1.35rem;
 		font-family: inherit;
 		border: none;
