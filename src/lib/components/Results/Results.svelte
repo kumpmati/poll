@@ -44,7 +44,7 @@
 <style>
 	ul {
 		list-style: none;
-		color: #333;
+		color: var(--text);
 		padding: 0;
 	}
 
@@ -66,11 +66,11 @@
 
 	.percentage {
 		margin-left: 1rem;
-		color: #555;
+		color: var(--text);
 	}
 
 	.percentage > span {
-		color: #bbb;
+		color: var(--text-subtle);
 	}
 
 	/* Color first bar differently */

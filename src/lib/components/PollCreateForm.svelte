@@ -1,48 +1,41 @@
 <script lang="ts">
 	import type { Option } from '$lib/types/poll';
 	import { createEventDispatcher } from 'svelte';
-	import { quintOut } from 'svelte/easing';
 	import Plus from './Icons/plus.svelte';
 	import Check from './Icons/check.svelte';
 	import Trash from './Icons/trash.svelte';
+	import More from './Icons/more-vertical.svelte';
 	import { flip } from 'svelte/animate';
-	import { crossfade } from 'svelte/transition';
 	import type { PartialPoll } from '$lib/utils/poll';
-
-	const [send, receive] = crossfade({
-		duration: (d) => Math.sqrt(d * 200),
-
-		fallback(node, params) {
-			const style = getComputedStyle(node);
-			const transform = style.transform === 'none' ? '' : style.transform;
-
-			return {
-				duration: 200,
-				easing: quintOut,
-				css: (t) => `
-					height: ${t * 61}px;
-					transform: ${transform};
-					opacity: ${t};
-				`
-			};
-		}
-	});
+	import { nanoid } from 'nanoid';
+	import { dndzone } from 'svelte-dnd-action';
 
 	const dispatch = createEventDispatcher();
 
 	let title: string = '';
-	let options: Option[] = [{ id: Date.now().toString(), text: '' }];
+	let options: Option[] = [
+		{ id: nanoid(), text: '' },
+		{ id: nanoid(), text: '' }
+	];
 	let multipleChoice: boolean;
 	let maxChoices: number = 1;
 	let allowMultipleAnswers: boolean = false;
 
 	const handleNewOption = () => {
-		options = [...options, { id: Date.now().toString(), text: '' }];
+		options = [...options, { id: nanoid(), text: '' }];
 	};
 
 	const handleDeleteOption = (id: string) => {
-		if (options.length === 1) return;
+		if (options.length <= 2) return;
 		options = options.filter((o) => o.id !== id);
+	};
+
+	const handleConsider = (e: CustomEvent<DndEvent>) => {
+		options = e.detail.items as Option[];
+	};
+
+	const handleFinalize = (e: CustomEvent<DndEvent>) => {
+		options = e.detail.items as Option[];
 	};
 
 	const handleSubmit = (e: any) => {
@@ -65,27 +58,35 @@
 </script>
 
 <form>
-	<input type="text" class="big" required bind:value={title} placeholder="Type your title here" />
+	<input
+		type="text"
+		class="text-input title"
+		required
+		bind:value={title}
+		placeholder="Type your title here"
+	/>
 
 	<h2>Choices</h2>
-	<ul>
+	<ul
+		use:dndzone={{ items: options, flipDurationMs: 200 }}
+		on:consider={handleConsider}
+		on:finalize={handleFinalize}
+	>
 		{#each options as { id, text }, index (id)}
-			<li
-				animate:flip={{ duration: 200 }}
-				out:send|local={{ key: id }}
-				in:receive|local={{ key: id }}
-			>
+			<li animate:flip={{ duration: 200 }} class="option" class:invalid={text.trim() === ''}>
+				<div class="drag-handler"><More /></div>
+
 				<input
 					required
 					type="text"
-					class="text-input"
+					class="text-input no-left-border"
 					bind:value={text}
 					placeholder={`Choice ${index + 1}`}
 					on:keyup|preventDefault
 				/>
 
 				<button
-					disabled={options.length === 1}
+					disabled={options.length <= 2}
 					class="delete"
 					type="button"
 					on:click={() => handleDeleteOption(id)}
@@ -94,11 +95,11 @@
 				</button>
 			</li>
 		{/each}
-
-		<button class="button wide" on:submit|preventDefault on:click={handleNewOption}>
-			Add choice<Plus />
-		</button>
 	</ul>
+
+	<button class="button wide" on:submit|preventDefault on:click={handleNewOption}>
+		<Plus />
+	</button>
 
 	<h2>Options</h2>
 	<div class="options">
@@ -140,8 +141,23 @@
 		font-weight: 800;
 	}
 
-	.big {
-		font-size: 1.35rem;
+	ul {
+		outline: none !important;
+		margin: 0;
+	}
+
+	.title {
+		padding: 1em !important;
+		font-size: 1.35rem !important;
+	}
+
+	.title:invalid {
+		border-color: var(--red);
+	}
+
+	.title:invalid:focus {
+		border-color: var(--red);
+		box-shadow: 0 0 0 5px var(--red-subtle);
 	}
 
 	.button {
@@ -155,7 +171,8 @@
 		justify-content: center;
 		align-items: center;
 		gap: 0.5rem;
-		color: #555;
+		color: var(--text-inverted-subtle);
+		background: #eee;
 	}
 
 	.button:hover {
@@ -168,38 +185,74 @@
 		width: 100%;
 	}
 
-	.button.submit {
+	.submit {
 		margin-top: 3rem;
 		padding: 1rem 2.75rem 1rem 3rem;
 		background: #5686b3;
 		color: #fff;
 	}
 
-	.button.submit:hover {
+	.submit:hover {
 		background: #4a6f92;
 	}
 
-	input[type='text'] {
-		font-size: 1.125rem;
+	.text-input {
+		font-size: 1.1rem;
 		width: 100%;
-		padding: 1em;
+		padding: 1rem;
 		box-sizing: border-box;
-		border: 2px solid #eee;
 		border-radius: 0.25rem;
+		border: 2px solid #eee;
 		background: #eee;
 
-		transition: box-shadow 100ms;
+		transition: box-shadow 200ms;
 	}
 
-	input[type='text']:focus {
+	.text-input:focus {
 		outline: none;
 		border-color: #888;
 		background: #fff;
 	}
 
-	input[type='text']:invalid {
-		border-color: rgb(255, 88, 88);
-		box-shadow: 0 0 0 5px rgb(255, 194, 194);
+	.option {
+		position: relative;
+		border: 2px solid transparent;
+		border-radius: 0.35rem;
+		overflow: hidden;
+
+		transition: box-shadow 200ms;
+	}
+
+	.option.invalid {
+		border-color: var(--red);
+	}
+
+	.option:focus-within {
+		border-color: #888;
+	}
+
+	.option.invalid:focus-within {
+		border-color: var(--red);
+		box-shadow: 0 0 0 5px var(--red-subtle);
+	}
+
+	.option .text-input:focus {
+		border-color: transparent;
+	}
+
+	.drag-handler {
+		left: 0;
+		height: 4rem;
+		padding: 0 0.15rem;
+		background: #ddd;
+		color: #000;
+		display: grid;
+		place-content: center;
+	}
+
+	.text-input.no-left-border {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
 	}
 
 	ul {

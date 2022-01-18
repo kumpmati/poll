@@ -39,11 +39,15 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Results - {poll.title}</title>
+</svelte:head>
+
 <h1>{poll.title}</h1>
 
 <div class="subtitle">
 	<h2>Results</h2>
-	<p>{stats.totalSubmissions} answers</p>
+	<p>{stats.totalSubmissions} {stats.totalSubmissions === 1 ? 'answer' : 'answers'}</p>
 </div>
 
 <Results {poll} {stats} />
@@ -71,7 +75,7 @@
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
-		color: #333;
+		color: var(--text-subtle);
 	}
 
 	.subtitle h2 {
@@ -80,7 +84,7 @@
 	}
 
 	.subtitle p {
-		color: #555;
+		color: var(--text-subtle);
 	}
 
 	h1 {

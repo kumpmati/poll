@@ -56,6 +56,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>{poll.title}</title>
+</svelte:head>
+
 <h1>{poll.title}</h1>
 
 <form on:submit={handleSubmit}>
