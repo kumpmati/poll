@@ -1,18 +1,14 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <script>
-	import { goto } from '$app/navigation';
 	import PollCreateForm from '$lib/components/PollCreateForm.svelte';
-	import { createPoll } from '$lib/utils/poll';
-
-	const handleNewTodo = async ({ detail }) => {
-		const poll = await createPoll(detail);
-
-		if (poll?.id) await goto(`/${poll.id}`);
-	};
 </script>
 
 <h1>POLL</h1>
 
-<PollCreateForm on:submit={handleNewTodo} />
+<PollCreateForm />
 
 <style>
 	h1 {

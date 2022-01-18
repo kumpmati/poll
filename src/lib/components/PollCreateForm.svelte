@@ -1,16 +1,18 @@
 <script lang="ts">
 	import type { Option } from '$lib/types/poll';
-	import { createEventDispatcher } from 'svelte';
 	import Plus from './Icons/plus.svelte';
 	import Check from './Icons/check.svelte';
 	import Trash from './Icons/trash.svelte';
 	import More from './Icons/more-vertical.svelte';
 	import { flip } from 'svelte/animate';
+	import { createPoll } from '$lib/utils/poll';
 	import type { PartialPoll } from '$lib/utils/poll';
 	import { nanoid } from 'nanoid';
 	import { dndzone } from 'svelte-dnd-action';
-
-	const dispatch = createEventDispatcher();
+	import { goto } from '$app/navigation';
+	import Refresh from './Icons/refresh.svelte';
+	import { copyToClipboard } from '$lib/utils/clipboard';
+	import { delay } from '$lib/utils/test';
 
 	let title: string = '';
 	let options: Option[] = [
@@ -20,6 +22,9 @@
 	let multipleChoice: boolean;
 	let maxChoices: number = 1;
 	let allowMultipleAnswers: boolean = false;
+
+	// loading indicator for submit button
+	let loading: boolean = false;
 
 	const handleNewOption = () => {
 		options = [...options, { id: nanoid(), text: '' }];
@@ -38,32 +43,46 @@
 		options = e.detail.items as Option[];
 	};
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
-		if (title.trim() === '') return;
-
+		// make sure title and options have content in them
 		const hasEmptyOptions = options.some((opt) => opt.text.trim() === '');
-		if (hasEmptyOptions) return;
+		if (hasEmptyOptions || title.trim() === '') return;
 
-		const poll: PartialPoll = {
+		loading = true;
+		// send request to create poll
+		const response = await createPoll({
 			title,
 			options,
 			allowMultipleAnswers,
 			// use max choices when in multiple choice mode, otherwise use 1
 			maxChoices: multipleChoice ? maxChoices : 1
-		};
-		dispatch('submit', poll);
+		});
+		loading = false;
+
+		if (response?.id) {
+			// copy link to clipboard automatically
+			await copyToClipboard(`https://poll.matsku.dev/${response.id}`);
+			// go to poll page
+			await goto(`/${response.id}`);
+			return;
+		}
+
+		alert('Hmmm, could not create poll 🤔');
 	};
 </script>
 
 <form>
+	<!-- svelte-ignore a11y-autofocus -->
 	<input
 		type="text"
 		class="text-input title"
+		class:invalid={title.trim() === ''}
 		required
 		bind:value={title}
 		placeholder="Type your title here"
+		autofocus
 	/>
 
 	<h2>Choices</h2>
@@ -124,8 +143,14 @@
 		</div>
 	</div>
 
-	<button type="submit" class="button submit" on:click={handleSubmit}>
-		Create poll <Check />
+	<button type="submit" class="button submit" on:click={handleSubmit} disabled={loading}>
+		{#if loading}
+			<span class="spinner">
+				<Refresh />
+			</span>
+		{:else}
+			Create poll <Check />
+		{/if}
 	</button>
 </form>
 
@@ -151,11 +176,11 @@
 		font-size: 1.35rem !important;
 	}
 
-	.title:invalid {
+	.title.invalid {
 		border-color: var(--red);
 	}
 
-	.title:invalid:focus {
+	.title.invalid:focus {
 		border-color: var(--red);
 		box-shadow: 0 0 0 5px var(--red-subtle);
 	}
@@ -186,6 +211,7 @@
 	}
 
 	.submit {
+		min-width: 23ch;
 		margin-top: 3rem;
 		padding: 1rem 2.75rem 1rem 3rem;
 		background: #5686b3;
@@ -194,6 +220,26 @@
 
 	.submit:hover {
 		background: #4a6f92;
+	}
+
+	.submit:disabled {
+		opacity: 0.75;
+		pointer-events: none;
+	}
+
+	.spinner {
+		display: grid;
+		place-content: center;
+		animation: spin 1s both infinite;
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
 	}
 
 	.text-input {
@@ -248,6 +294,13 @@
 		color: #000;
 		display: grid;
 		place-content: center;
+		border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+		transition: padding 200ms;
+	}
+
+	.drag-handler:hover {
+		filter: brightness(0.95);
 	}
 
 	.text-input.no-left-border {
@@ -305,6 +358,11 @@
 	@media screen and (max-width: 800px) {
 		.options {
 			grid-template-columns: 1fr;
+		}
+
+		.submit {
+			margin-left: auto;
+			margin-right: auto;
 		}
 	}
 

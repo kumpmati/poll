@@ -23,12 +23,14 @@
 	import CheckboxGroup from '$lib/components/form/CheckboxGroup.svelte';
 	import { browser } from '$app/env';
 	import { nanoid } from 'nanoid';
+	import Refresh from '$lib/components/Icons/refresh.svelte';
 
 	export let id: string;
 	export let poll: Poll;
 
 	let selections: string[] = [];
 	let canSubmit: boolean = false;
+	let loading: boolean = false;
 
 	$: {
 		if (browser) {
@@ -45,7 +47,9 @@
 		// either get existing answer id for this poll or generate new one
 		const userId = localStorage.getItem(`poll-${id}`) || nanoid();
 
+		loading = true;
 		const response = await submitAnswer(id, selections, userId);
+		loading = false;
 		if (response) {
 			// save the answer id to local storage for future use in this poll
 			localStorage.setItem(`poll-${id}`, userId);
@@ -74,13 +78,21 @@
 	{/if}
 
 	<div class="controls">
-		<input
+		<button
 			type="submit"
 			class="button big"
 			value="Submit"
-			disabled={!canSubmit}
-			title={!canSubmit ? 'Already submitted' : ''}
-		/>
+			disabled={!canSubmit || loading}
+			title={!canSubmit ? 'Cannot submit more than once' : ''}
+		>
+			{#if loading}
+				<span class="spinner">
+					<Refresh />
+				</span>
+			{:else}
+				Submit
+			{/if}</button
+		>
 		<a class="button" href={`${id}/results`}>Results</a>
 	</div>
 </form>
@@ -120,7 +132,7 @@
 	}
 
 	.button:disabled {
-		opacity: 0.5;
+		opacity: 0.75;
 		cursor: not-allowed;
 	}
 
@@ -132,5 +144,20 @@
 
 	.big {
 		padding: 0.75rem 4rem;
+	}
+
+	.spinner {
+		display: grid;
+		place-content: center;
+		animation: spin 1s both infinite;
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
 	}
 </style>

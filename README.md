@@ -1,38 +1,24 @@
-# create-svelte
+# Poll
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+## Getting started
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
-```
-
-> Note: the `@next` is temporary
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+1. Clone the repository
+2. Navigate to the repository root
+3. Run `npm install`
+4. Create a `.env` file in the repository root, with the following contents:
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# '/poll/ws' is the path for the poll's websocket route in @kumpmati/tools-backend
+# NOTE: use 'ws' as protocol when the backend is running locally, otherwise use 'wss'!
+VITE_PUBLIC_WS_URL=wss://<backend url>/poll/ws
+# '/poll' is the path for the poll REST api when using @kumpmati/tools-backend
+VITE_API_URL=https://<backend url>/poll
 ```
 
-## Building
+5. Run `npm run dev` in the repository root
 
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
+## Scripts
 
 ```bash
-npm run build
+npm run dev // starts development server
 ```
-
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
