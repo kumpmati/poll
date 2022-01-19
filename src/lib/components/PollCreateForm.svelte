@@ -62,10 +62,13 @@
 		loading = false;
 
 		if (response?.id) {
-			// copy link to clipboard automatically
-			await copyToClipboard(`https://poll.matsku.dev/${response.id}`);
 			// go to poll page
 			await goto(`/${response.id}`);
+
+			// copy link to clipboard automatically
+			await copyToClipboard(`https://poll.matsku.dev/${response.id}`).catch(() =>
+				console.warn('could not copy to clipboard')
+			);
 			return;
 		}
 
