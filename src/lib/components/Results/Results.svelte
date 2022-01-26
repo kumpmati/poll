@@ -4,6 +4,7 @@
 	import { crossfade } from 'svelte/transition';
 	import { getSortedPollOptions } from '$lib/utils/sort';
 	import { flip } from 'svelte/animate';
+	import { identity } from 'svelte/internal';
 
 	export let poll: Poll;
 	export let stats: Stats;
@@ -20,23 +21,27 @@
 </script>
 
 <ul>
-	{#each getSortedPollOptions(poll, stats) as opt (opt.id)}
+	{#each getSortedPollOptions(poll, stats) as { id, text } (id)}
 		<li
-			in:receive|local={{ key: opt.id }}
-			out:send|local={{ key: opt.id }}
-			animate:flip={{ duration: 300 }}
+			in:receive|local={{ key: id }}
+			out:send|local={{ key: id }}
+			animate:flip={{ duration: 200 }}
 		>
 			<div class="details">
-				<p class="text">
-					{opt.text}
-				</p>
+				{#if text.startsWith('http')}
+					<img class="image" src={text} alt="" />
+				{:else}
+					<p class="text">
+						{text}
+					</p>
+				{/if}
 
 				<p class="percentage">
-					{calcPercentage(opt.id).toFixed(0)} <span>%</span>
+					{calcPercentage(id).toFixed(0)} <span>%</span>
 				</p>
 			</div>
 
-			<div class="bar" style={`width: ${calcPercentage(opt.id)}%`} />
+			<div class="bar" style={`width: ${calcPercentage(id)}%`} />
 		</li>
 	{/each}
 </ul>
@@ -56,6 +61,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+	}
+
+	.image {
+		width: 80%;
+		max-width: 25rem;
+		border-radius: 0.25rem;
+		margin: 0.5rem 0;
 	}
 
 	.text {
@@ -83,6 +95,6 @@
 		height: 2.5rem;
 		border-radius: 0.25rem;
 		background-color: rgb(104, 160, 212);
-		transition: width 200ms, background 200ms;
+		transition: width 200ms, background-color 200ms;
 	}
 </style>

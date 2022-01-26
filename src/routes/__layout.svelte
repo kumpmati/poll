@@ -31,6 +31,10 @@
 			--text-inverted-subtle: #333;
 			--red: rgb(255, 98, 98);
 			--red-subtle: rgba(255, 194, 194, 0.75);
+			--green: rgb(73, 173, 47);
+			--green-subtle: rgba(111, 235, 80, 0.75);
+			--blue: rgb(31, 99, 138);
+			--blue-subtle: rgba(81, 160, 206, 0.75);
 		}
 	}
 
@@ -43,6 +47,10 @@
 			--text-inverted-subtle: #333;
 			--red: rgb(255, 98, 98);
 			--red-subtle: rgba(255, 194, 194, 0.75);
+			--green: rgb(111, 235, 80);
+			--green-subtle: rgba(111, 235, 80, 0.75);
+			--blue: rgb(52, 133, 180);
+			--blue-subtle: rgba(72, 157, 206, 0.75);
 		}
 	}
 </style>

@@ -109,6 +109,10 @@
 		h1 {
 			font-size: 2.5rem;
 		}
+
+		.controls {
+			flex-direction: column;
+		}
 	}
 
 	.controls {

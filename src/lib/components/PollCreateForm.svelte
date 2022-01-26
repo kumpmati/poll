@@ -13,6 +13,7 @@
 	import Refresh from './Icons/refresh.svelte';
 	import { copyToClipboard } from '$lib/utils/clipboard';
 	import { delay } from '$lib/utils/test';
+	import { text } from 'svelte/internal';
 
 	let title: string = '';
 	let options: Option[] = [
@@ -95,9 +96,13 @@
 		on:finalize={handleFinalize}
 	>
 		{#each options as { id, text }, index (id)}
-			<li animate:flip={{ duration: 200 }} class="option" class:invalid={text.trim() === ''}>
+			<li
+				animate:flip={{ duration: 200 }}
+				class="option"
+				class:invalid={text.trim() === ''}
+				class:image={text.startsWith('http')}
+			>
 				<div class="drag-handler"><More /></div>
-
 				<input
 					required
 					type="text"
@@ -106,6 +111,9 @@
 					placeholder={`Choice ${index + 1}`}
 					on:keyup|preventDefault
 				/>
+				{#if text.startsWith('http')}
+					<img class="image-preview" src={text} alt="" />
+				{/if}
 
 				<button
 					disabled={options.length <= 2}
@@ -272,6 +280,16 @@
 		transition: box-shadow 200ms;
 	}
 
+	.option.image {
+		height: 6rem;
+	}
+
+	.option .image-preview {
+		position: absolute;
+		height: 6rem;
+		right: 4rem;
+	}
+
 	.option.invalid {
 		border-color: var(--red);
 	}
@@ -291,7 +309,7 @@
 
 	.drag-handler {
 		left: 0;
-		height: 4rem;
+		min-height: 4rem;
 		padding: 0 0.15rem;
 		background: #ddd;
 		color: #000;

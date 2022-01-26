@@ -13,10 +13,14 @@
 </script>
 
 <ul>
-	{#each options as { id, text } (id)}
-		<label>
+	{#each options as { id, text }, index (id)}
+		<label class:image={text.startsWith('http')}>
 			<input type="radio" value={id} bind:group={selectedItem} />
-			{text}
+			{#if text.startsWith('http')}
+				<img src={text} alt="" />
+			{:else}
+				{text}
+			{/if}
 		</label>
 	{/each}
 </ul>
@@ -41,5 +45,16 @@
 		min-width: 1.5rem;
 		height: 1.5rem;
 		margin-right: 0.5rem;
+	}
+
+	label > img {
+		width: calc(100% - 2rem);
+		border-radius: 0.25rem;
+		transition: box-shadow 100ms;
+	}
+
+	label > input:checked ~ img {
+		outline: 2px solid var(--blue);
+		box-shadow: 0 0 0 7px var(--blue-subtle);
 	}
 </style>
