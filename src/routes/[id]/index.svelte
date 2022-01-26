@@ -90,7 +90,7 @@
 					<Refresh />
 				</span>
 			{:else}
-				Submit
+				{canSubmit ? 'Submit' : 'Submitted'}
 			{/if}</button
 		>
 		<a class="button" href={`${id}/results`}>Results</a>
