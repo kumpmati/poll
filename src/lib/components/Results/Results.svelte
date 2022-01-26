@@ -87,14 +87,14 @@
 
 	/* Color first bar differently */
 	ul > li:first-of-type .bar {
-		background: rgb(55, 85, 114) !important;
+		background: rgb(104, 160, 212) !important;
 	}
 
 	.bar {
 		display: block;
 		height: 2.5rem;
 		border-radius: 0.25rem;
-		background-color: rgb(104, 160, 212);
+		background-color: rgb(55, 85, 114);
 		transition: width 200ms, background-color 200ms;
 	}
 </style>
