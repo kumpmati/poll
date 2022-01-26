@@ -6,14 +6,11 @@
 	import More from './Icons/more-vertical.svelte';
 	import { flip } from 'svelte/animate';
 	import { createPoll } from '$lib/utils/poll';
-	import type { PartialPoll } from '$lib/utils/poll';
 	import { nanoid } from 'nanoid';
 	import { dndzone } from 'svelte-dnd-action';
 	import { goto } from '$app/navigation';
 	import Refresh from './Icons/refresh.svelte';
 	import { copyToClipboard } from '$lib/utils/clipboard';
-	import { delay } from '$lib/utils/test';
-	import { text } from 'svelte/internal';
 
 	let title: string = '';
 	let options: Option[] = [
@@ -85,7 +82,7 @@
 		class:invalid={title.trim() === ''}
 		required
 		bind:value={title}
-		placeholder="Type your title here"
+		placeholder="Poll title here"
 		autofocus
 	/>
 
@@ -288,6 +285,8 @@
 		position: absolute;
 		height: 6rem;
 		right: 4rem;
+		pointer-events: none;
+		opacity: 0.95;
 	}
 
 	.option.invalid {
