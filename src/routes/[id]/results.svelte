@@ -47,7 +47,15 @@
 
 <div class="subtitle">
 	<h2>Results</h2>
-	<p>{stats.totalSubmissions} {stats.totalSubmissions === 1 ? 'answer' : 'answers'}</p>
+	<div class="numbers">
+		<p>
+			<b>{stats.totalSubmissions}</b>
+			<span class="subtle">{stats.totalSubmissions === 1 ? 'submission' : 'submissions'}</span>
+		</p>
+		{#if poll.maxChoices > 1}
+			<span class="subtle">({stats.totalSubmissionOptions} total options selected)</span>
+		{/if}
+	</div>
 </div>
 
 <Results {poll} {stats} />
@@ -84,7 +92,15 @@
 	}
 
 	.subtitle p {
+		color: var(--text);
+	}
+
+	.subtle {
 		color: var(--text-subtle);
+	}
+
+	.numbers {
+		text-align: right;
 	}
 
 	h1 {

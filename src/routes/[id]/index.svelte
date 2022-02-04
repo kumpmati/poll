@@ -66,6 +66,15 @@
 
 <h1>{poll.title}</h1>
 
+<div class="settings">
+	<p>
+		{poll.allowMultipleAnswers ? 'Multiple submissions allowed' : 'One submission per person'}
+	</p>
+	<p>
+		{poll.maxChoices > 1 ? `Multiple choice (max ${poll.maxChoices} choices)` : 'Single choice'}
+	</p>
+</div>
+
 <form on:submit={handleSubmit}>
 	{#if poll.maxChoices === 1}
 		<RadioGroup options={poll.options} bind:selection={selections} />
@@ -103,6 +112,11 @@
 		margin-top: 8rem;
 		font-size: 4rem;
 		font-weight: 400;
+	}
+
+	.settings {
+		color: var(--text-subtle);
+		margin-bottom: 5rem;
 	}
 
 	@media screen and (max-width: 700px) {

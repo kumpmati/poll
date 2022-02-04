@@ -4,7 +4,6 @@
 	import { crossfade } from 'svelte/transition';
 	import { getSortedPollOptions } from '$lib/utils/sort';
 	import { flip } from 'svelte/animate';
-	import { identity } from 'svelte/internal';
 
 	export let poll: Poll;
 	export let stats: Stats;
@@ -37,7 +36,7 @@
 				{/if}
 
 				<p class="percentage">
-					{calcPercentage(id).toFixed(0)} <span>%</span>
+					<b>{stats[id]}</b> <span>({calcPercentage(id).toFixed(0)} %)</span>
 				</p>
 			</div>
 
