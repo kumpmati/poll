@@ -13,6 +13,7 @@
 	import { copyToClipboard } from '$lib/utils/clipboard';
 
 	let title: string = '';
+	let description: string = '';
 	let options: Option[] = [
 		{ id: nanoid(), text: '' },
 		{ id: nanoid(), text: '' }
@@ -52,6 +53,7 @@
 		// send request to create poll
 		const response = await createPoll({
 			title,
+			description,
 			options,
 			allowMultipleAnswers,
 			// use max choices when in multiple choice mode, otherwise use 1
@@ -85,6 +87,10 @@
 		placeholder="Poll title here"
 		autofocus
 	/>
+
+	<h2>Description (optional)</h2>
+
+	<textarea class="text-input textarea" bind:value={description} />
 
 	<h2>Choices</h2>
 	<ul
@@ -125,7 +131,7 @@
 	</ul>
 
 	<button class="button wide" on:submit|preventDefault on:click={handleNewOption}>
-		<Plus />
+		Add choice <Plus />
 	</button>
 
 	<h2>Options</h2>
@@ -204,12 +210,12 @@
 		justify-content: center;
 		align-items: center;
 		gap: 0.5rem;
-		color: var(--text-inverted-subtle);
-		background: #eee;
+		color: var(--text);
+		background: rgba(128, 128, 128, 0.25);
 	}
 
 	.button:hover {
-		background: #ddd;
+		background: rgba(128, 128, 128, 0.5);
 		border-color: #ddd;
 		cursor: pointer;
 	}
@@ -252,12 +258,14 @@
 
 	.text-input {
 		font-size: 1.1rem;
+		font-family: 'Open Sans';
 		width: 100%;
 		padding: 1rem;
 		box-sizing: border-box;
 		border-radius: 0.25rem;
-		border: 2px solid #eee;
-		background: #eee;
+		border: 2px solid transparent;
+		background: rgba(128, 128, 128, 0.1);
+		color: currentColor;
 
 		transition: box-shadow 200ms;
 	}
@@ -265,7 +273,17 @@
 	.text-input:focus {
 		outline: none;
 		border-color: #888;
-		background: #fff;
+		background: rgba(128, 128, 128, 0.2);
+	}
+
+	.text-input.invalid {
+		border: 2px solid var(--red);
+	}
+
+	.text-input.textarea {
+		max-width: 100%;
+		min-width: 100%;
+		min-height: 10rem;
 	}
 
 	.option {
@@ -310,8 +328,8 @@
 		left: 0;
 		min-height: 4rem;
 		padding: 0 0.15rem;
-		background: #ddd;
-		color: #000;
+		background: rgba(128, 128, 128, 0.2);
+		color: currentColor;
 		display: grid;
 		place-content: center;
 		border-right: 1px solid rgba(0, 0, 0, 0.05);
@@ -350,8 +368,7 @@
 		display: grid;
 		place-content: center;
 		border: none;
-		background: rgba(238, 238, 238, 0.5);
-		backdrop-filter: blur(5px);
+		background: none;
 		border-radius: 0.125rem;
 		margin: 0.25rem;
 		color: #888;
@@ -365,7 +382,8 @@
 	}
 
 	.delete:not(:disabled):hover {
-		color: #555;
+		background: rgba(238, 238, 238, 0.1);
+		color: currentColor;
 		cursor: pointer;
 	}
 

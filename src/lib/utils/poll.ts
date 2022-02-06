@@ -1,8 +1,11 @@
-import type { Answer, Poll } from '$lib/types/poll';
+import type { Answer, Poll, Results } from '$lib/types/poll';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_PUBLIC_API_URL;
 
-export type PartialPoll = Pick<Poll, 'title' | 'options' | 'maxChoices' | 'allowMultipleAnswers'>;
+export type PartialPoll = Pick<
+	Poll,
+	'title' | 'description' | 'options' | 'maxChoices' | 'allowMultipleAnswers'
+>;
 
 export const createPoll = async (poll: PartialPoll): Promise<Poll> => {
 	const newPoll: Poll = {
@@ -10,7 +13,6 @@ export const createPoll = async (poll: PartialPoll): Promise<Poll> => {
 
 		// override these values
 		id: '',
-		answers: [],
 		created: new Date(),
 		requireAuth: false
 	};
@@ -27,7 +29,13 @@ export const createPoll = async (poll: PartialPoll): Promise<Poll> => {
 };
 
 export const getPoll = async (id: string): Promise<Poll> => {
-	const response = await fetch(`${BASE_URL}/poll/${id}`);
+	const response = await fetch(`${BASE_URL}/${id}`);
+
+	return await response.json();
+};
+
+export const getPollResults = async (id: string): Promise<Results> => {
+	const response = await fetch(`${BASE_URL}/${id}/results`);
 
 	return await response.json();
 };
@@ -44,7 +52,7 @@ export const submitAnswer = async (
 		submitted: new Date()
 	};
 
-	const response = await fetch(`${BASE_URL}/poll/${pollId}`, {
+	const response = await fetch(`${BASE_URL}/${pollId}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

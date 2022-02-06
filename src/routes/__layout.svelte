@@ -27,7 +27,7 @@
 			--background: #222;
 			--text: #dddddd;
 			--text-subtle: #aaa;
-			--text-inverted: #333;
+			--text-inverted: #222;
 			--text-inverted-subtle: #333;
 			--red: rgb(216, 54, 54);
 			--red-subtle: rgba(255, 110, 110, 0.85);
@@ -43,8 +43,8 @@
 			--background: #fff;
 			--text: #333;
 			--text-subtle: #555;
-			--text-inverted: #dddddd;
-			--text-inverted-subtle: #333;
+			--text-inverted: #eee;
+			--text-inverted-subtle: #ddd;
 			--red: rgb(216, 54, 54);
 			--red-subtle: rgba(255, 110, 110, 0.85);
 			--green: rgb(111, 235, 80);

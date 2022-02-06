@@ -13,10 +13,16 @@ export type Answer = {
 export type Poll = {
 	id: string;
 	title: string;
+	description?: string;
 	created: Date;
 	options: Option[];
 	maxChoices: number;
 	allowMultipleAnswers: boolean;
 	requireAuth: boolean;
+	authToken?: string;
+};
+
+export type Results = {
+	id: string;
 	answers: Answer[];
 };

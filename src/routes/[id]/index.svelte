@@ -24,6 +24,7 @@
 	import { browser } from '$app/env';
 	import { nanoid } from 'nanoid';
 	import Refresh from '$lib/components/Icons/refresh.svelte';
+	import SvelteMarkdown from 'svelte-markdown';
 
 	export let id: string;
 	export let poll: Poll;
@@ -65,6 +66,10 @@
 </svelte:head>
 
 <h1>{poll.title}</h1>
+
+<span class="description">
+	<SvelteMarkdown source={poll.description} />
+</span>
 
 <div class="settings">
 	<p>
@@ -116,17 +121,34 @@
 
 	.settings {
 		color: var(--text-subtle);
-		margin-bottom: 5rem;
+		margin: 3rem 0;
+		background: rgba(0, 0, 0, 0.1);
+		padding: 0.25rem 1rem;
+		border-radius: 0.25rem;
+		width: fit-content;
 	}
 
 	@media screen and (max-width: 700px) {
 		h1 {
-			font-size: 2.5rem;
+			font-size: 3.25rem;
 		}
 
 		.controls {
 			flex-direction: column;
 		}
+	}
+
+	.description {
+		color: var(--text-subtle);
+	}
+
+	.description > :global(h1),
+	.description > :global(h2),
+	.description > :global(h3),
+	.description > :global(h4) {
+		color: var(--text);
+		font-family: 'Open Sans' !important;
+		font-weight: 400;
 	}
 
 	.controls {
@@ -143,8 +165,8 @@
 		border: none;
 		border-radius: 0.25rem;
 		padding: 0.75rem 1.5rem;
-		color: #555;
-		background: #eee;
+		color: currentColor;
+		background: rgba(128, 128, 128, 0.25);
 		text-decoration: none;
 		text-align: center;
 	}
@@ -156,12 +178,19 @@
 
 	.button:not(:disabled):hover {
 		cursor: pointer;
-		color: #333;
-		background: #ddd;
+		color: currentColor;
+		background: rgba(128, 128, 128, 0.4);
 	}
 
 	.big {
+		background: var(--blue);
+		color: #eee;
 		padding: 0.75rem 4rem;
+	}
+
+	.button.big:not(:disabled):hover {
+		background: var(--blue-subtle);
+		color: #ddd;
 	}
 
 	.spinner {
