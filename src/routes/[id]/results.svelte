@@ -1,5 +1,5 @@
 <script context="module">
-	import { getPoll } from '$lib/utils/poll';
+	import { getPoll, getPollResults } from '$lib/utils/poll';
 
 	export const load = async ({ page }) => {
 		const { id } = page.params;
@@ -7,35 +7,33 @@
 		const poll = await getPoll(id).catch(() => null);
 		if (!poll) return;
 
+		const results = await getPollResults(id).catch(() => null);
+		if (!results) return;
+
 		return {
-			props: { poll }
+			props: {
+				poll,
+				results
+			}
 		};
 	};
 </script>
 
 <script lang="ts">
-	import type { Poll } from '$lib/types/poll';
+	import type { Poll, Results as ResultsType } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
-	import { onMount } from 'svelte';
-	import { connectWebSocket } from '$lib/utils/websocket';
 	import Results from '$lib/components/Results/Results.svelte';
+	import { onMount } from 'svelte';
+	import { connectSocketIO } from '$lib/utils/websocket';
 
 	export let poll: Poll;
+	export let results: ResultsType;
 
-	// stats update when poll updates
-	$: stats = calculateStats(poll);
+	// stats update when poll or results update
+	$: stats = calculateStats(poll, results);
 
 	onMount(() => {
-		const { answers, initial } = connectWebSocket(poll);
-
-		initial.subscribe((value) => void (poll = value));
-
-		// update poll when new data is received
-		answers.subscribe((answer) => {
-			if (answer && !poll.answers.some((a) => a.id === answer.id)) {
-				poll.answers = [...poll.answers, answer];
-			}
-		});
+		connectSocketIO(results, poll.id).subscribe((value) => (results = value));
 	});
 </script>
 
@@ -118,20 +116,26 @@
 
 	.button {
 		appearance: none;
+		margin-top: 1rem;
 		font-size: 1.35rem;
 		font-family: inherit;
 		border: none;
 		border-radius: 0.25rem;
 		padding: 0.75rem 1.5rem;
-		color: #555;
-		background: #eee;
+		color: currentColor;
+		background: rgba(128, 128, 128, 0.25);
 		text-decoration: none;
 		text-align: center;
 	}
 
-	.button:hover {
+	.button:disabled {
+		opacity: 0.75;
+		cursor: not-allowed;
+	}
+
+	.button:not(:disabled):hover {
 		cursor: pointer;
-		color: #333;
-		background: #ddd;
+		color: currentColor;
+		background: rgba(128, 128, 128, 0.4);
 	}
 </style>
