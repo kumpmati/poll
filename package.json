@@ -31,6 +31,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"nanoid": "^3.2.0"
+		"nanoid": "^3.2.0",
+		"socket.io-client": "^4.4.1"
 	}
 }

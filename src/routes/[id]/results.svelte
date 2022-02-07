@@ -23,12 +23,18 @@
 	import type { Poll, Results as ResultsType } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
 	import Results from '$lib/components/Results/Results.svelte';
+	import { onMount } from 'svelte';
+	import { connectSocketIO } from '$lib/utils/websocket';
 
 	export let poll: Poll;
 	export let results: ResultsType;
 
-	// stats update when poll updates
+	// stats update when poll or results update
 	$: stats = calculateStats(poll, results);
+
+	onMount(() => {
+		connectSocketIO(results, poll.id).subscribe((value) => (results = value));
+	});
 </script>
 
 <svelte:head>

@@ -1,6 +1,7 @@
 import type { Answer, Poll, Results } from '$lib/types/poll';
+import { variables } from './env';
 
-const BASE_URL = import.meta.env.VITE_PUBLIC_API_URL;
+const BASE_URL = variables.API_URL;
 
 export type PartialPoll = Pick<
 	Poll,

@@ -1,44 +1,42 @@
 import { browser } from '$app/env';
-import type { Answer, Poll } from '$lib/types/poll';
-import { writable } from 'svelte/store';
-import type { Writable } from 'svelte/store';
+import type { Answer, Results } from '$lib/types/poll';
 import { variables } from './env';
+import { io } from 'socket.io-client';
+import { readable } from 'svelte/store';
+import type { Readable } from 'svelte/store';
 
-type WebSocketHelper = {
-	answers: Writable<Answer>;
-	initial: Writable<Poll>;
-};
-
-export const connectWebSocket = (poll: Poll): WebSocketHelper => {
+export const connectSocketIO = (initialData: Results, pollId: string): Readable<Results> => {
 	if (!browser) return; // only run client side
 
-	const answers = writable<Answer>(null);
-	const initial = writable<Poll>(poll);
+	const socket = io(`${variables.WS_URL}?id=${pollId}`);
 
-	const ws = new WebSocket(`${variables.WS_URL}/${poll.id}`);
+	let data: Results = initialData;
 
-	ws.addEventListener('open', () => console.log('connected'));
-	ws.addEventListener('close', () => console.log('disconnected'));
-
-	ws.addEventListener('message', (d) => {
-		// data is either the full poll or just a single new answer
-		try {
-			const data = JSON.parse(d.data);
-
-			if ('answers' in data) {
-				const newPoll = data as Poll;
-				initial.set(newPoll);
-			} else if ('submitted' in data) {
-				const answer = data as Answer;
-				answers.set(answer);
-			}
-		} catch (err) {
-			console.warn('error parsing incoming data:', err);
-		}
+	socket.on('connect', () => {
+		console.log('connected');
 	});
 
-	return {
-		answers,
-		initial
-	};
+	socket.on('disconnect', (d) => {
+		console.log(d, 'disconnected');
+	});
+
+	return readable<Results>(initialData, (set) => {
+		const setInitialData = (d: Results) => {
+			data = d;
+			set(data);
+		};
+
+		const update = (d: Answer) => {
+			data = { ...data, answers: [...data.answers, d] };
+			set(data);
+		};
+
+		socket.on('newAnswer', update);
+		socket.on('initialData', setInitialData);
+
+		return () => {
+			socket.off('newAnswer', update);
+			socket.off('initialData', setInitialData);
+		};
+	});
 };
