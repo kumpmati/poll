@@ -6,6 +6,10 @@
 	import PollCreateForm from '$lib/components/PollCreateForm.svelte';
 </script>
 
+<svelte:head>
+	<title>Poll</title>
+</svelte:head>
+
 <h1>POLL</h1>
 
 <PollCreateForm />

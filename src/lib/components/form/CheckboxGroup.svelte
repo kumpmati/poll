@@ -7,13 +7,13 @@
 </script>
 
 <ul>
-	{#each options as { id, text }, index (id)}
+	{#each options as { id, text } (id)}
 		<label class:image={text.startsWith('http')}>
 			<input
 				type="checkbox"
 				value={id}
 				bind:group={selection}
-				disabled={!selection.includes(id) && selection.length >= maxChoices}
+				disabled={!selection.includes(id) && (selection?.length ?? 0) >= maxChoices}
 			/>
 			{#if text.startsWith('http')}
 				<img src={text} alt="" />

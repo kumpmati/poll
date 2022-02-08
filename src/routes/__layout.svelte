@@ -1,7 +1,3 @@
-<svelte:head>
-	<title>Poll</title>
-</svelte:head>
-
 <main>
 	<slot />
 </main>
@@ -13,13 +9,20 @@
 		font-family: 'Open Sans';
 		background: var(--background);
 		color: var(--text);
+		height: 100%;
 	}
 
 	main {
 		max-width: 40rem;
 		margin: 0 auto;
-		padding: 1rem;
+		padding: 0 1rem;
 		margin-bottom: 5rem;
+	}
+
+	@media screen and (max-width: 500px) {
+		main {
+			padding: 0 0.25rem;
+		}
 	}
 
 	@media (prefers-color-scheme: dark) {
