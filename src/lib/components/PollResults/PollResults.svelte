@@ -92,7 +92,7 @@
     align-items: center;
     position: absolute;
     top: 50%;
-    left: 1rem;
+    left: 1.5rem;
     transform: translateY(-50%);
     margin: 0;
     color: #fff;
@@ -111,7 +111,7 @@
 
   .bar {
     display: block;
-    height: 2.5rem;
+    height: 3.25rem;
     border-radius: 0.25rem;
     background: var(--blue);
     transition: width 200ms, background-color 200ms;

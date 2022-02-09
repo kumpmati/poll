@@ -27,7 +27,7 @@
 
   @media (prefers-color-scheme: dark) {
     :global(:root) {
-      --background: #222;
+      --background: #000;
       --text: #dddddd;
       --text-subtle: #aaa;
       --text-inverted: #222;

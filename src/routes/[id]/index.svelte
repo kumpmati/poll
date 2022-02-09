@@ -111,7 +111,7 @@
   .settings {
     color: var(--text-subtle);
     margin: 3rem 0;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(128, 128, 128, 0.15);
     padding: 0.25rem 1rem;
     border-radius: 0.25rem;
     width: fit-content;
