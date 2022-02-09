@@ -1,9 +1,7 @@
 <script lang="ts">
-	import type { Option } from '$lib/types/poll';
+	import type { Option as OptionType } from '$lib/types/poll';
 	import Plus from './Icons/plus.svelte';
 	import Check from './Icons/check.svelte';
-	import Trash from './Icons/trash.svelte';
-	import More from './Icons/more-vertical.svelte';
 	import { flip } from 'svelte/animate';
 	import { createPoll } from '$lib/utils/poll';
 	import { nanoid } from 'nanoid';
@@ -11,10 +9,13 @@
 	import { goto } from '$app/navigation';
 	import Refresh from './Icons/refresh.svelte';
 	import { copyToClipboard } from '$lib/utils/clipboard';
+	import TextField from './TextField/TextField.svelte';
+	import Choice from './Choice/Choice.svelte';
+	import Button from './Button/Button.svelte';
 
 	let title: string = '';
 	let description: string = '';
-	let options: Option[] = [
+	let options: OptionType[] = [
 		{ id: nanoid(), text: '' },
 		{ id: nanoid(), text: '' }
 	];
@@ -35,11 +36,11 @@
 	};
 
 	const handleConsider = (e: CustomEvent<DndEvent>) => {
-		options = e.detail.items as Option[];
+		options = e.detail.items as OptionType[];
 	};
 
 	const handleFinalize = (e: CustomEvent<DndEvent>) => {
-		options = e.detail.items as Option[];
+		options = e.detail.items as OptionType[];
 	};
 
 	const handleSubmit = async (e: any) => {
@@ -78,19 +79,17 @@
 
 <form>
 	<!-- svelte-ignore a11y-autofocus -->
-	<input
-		type="text"
-		class="text-input title"
-		class:invalid={title.trim() === ''}
+	<TextField
+		size="large"
 		required
 		bind:value={title}
 		placeholder="Poll title here"
-		autofocus
+		invalid={title.trim() === ''}
 	/>
 
 	<h2>Description (optional)</h2>
 
-	<textarea class="text-input textarea" bind:value={description} />
+	<textarea class="textarea" bind:value={description} />
 
 	<h2>Choices</h2>
 	<ul
@@ -99,40 +98,22 @@
 		on:finalize={handleFinalize}
 	>
 		{#each options as { id, text }, index (id)}
-			<li
-				animate:flip={{ duration: 200 }}
-				class="option"
-				class:invalid={text.trim() === ''}
-				class:image={text.startsWith('http')}
-			>
-				<div class="drag-handler"><More /></div>
-				<input
+			<li animate:flip={{ duration: 200 }}>
+				<Choice
+					invalid={text.trim() === ''}
 					required
-					type="text"
-					class="text-input no-left-border"
 					bind:value={text}
 					placeholder={`Choice ${index + 1}`}
-					on:keyup|preventDefault
+					on:delete={() => handleDeleteOption(id)}
+					canDelete={options.length > 2}
 				/>
-				{#if text.startsWith('http')}
-					<img class="image-preview" src={text} alt="" />
-				{/if}
-
-				<button
-					disabled={options.length <= 2}
-					class="delete"
-					type="button"
-					on:click={() => handleDeleteOption(id)}
-				>
-					<Trash />
-				</button>
 			</li>
 		{/each}
 	</ul>
 
-	<button class="button wide" on:submit|preventDefault on:click={handleNewOption}>
+	<Button priority="secondary" on:click={handleNewOption}>
 		Add choice <Plus />
-	</button>
+	</Button>
 
 	<h2>Options</h2>
 	<div class="options">
@@ -157,15 +138,11 @@
 		</div>
 	</div>
 
-	<button type="submit" class="button submit" on:click={handleSubmit} disabled={loading}>
-		{#if loading}
-			<span class="spinner">
-				<Refresh />
-			</span>
-		{:else}
+	<div class="submit">
+		<Button on:click={handleSubmit} priority="main" {loading}>
 			Create poll <Check />
-		{/if}
-	</button>
+		</Button>
+	</div>
 </form>
 
 <style>
@@ -185,165 +162,21 @@
 		margin: 0;
 	}
 
-	.title {
-		padding: 1em !important;
-		font-size: 1.35rem !important;
-	}
-
-	.title.invalid {
-		border-color: var(--red);
-	}
-
-	.title.invalid:focus {
-		border-color: var(--red);
-		box-shadow: 0 0 0 5px var(--red-subtle);
-	}
-
-	.button {
-		font-size: 1.125rem;
-		appearance: none;
-		border: none;
-		border-radius: 0.25rem;
-		padding: 1rem 2rem;
-		width: fit-content;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5rem;
-		color: var(--text);
-		background: rgba(128, 128, 128, 0.25);
-	}
-
-	.button:hover {
-		background: rgba(128, 128, 128, 0.5);
-		border-color: #ddd;
-		cursor: pointer;
-	}
-
-	.button.wide {
-		width: 100%;
-	}
-
-	.submit {
-		min-width: 23ch;
-		margin-top: 3rem;
-		padding: 1rem 2.75rem 1rem 3rem;
-		background: #5686b3;
-		color: #fff;
-	}
-
-	.submit:hover {
-		background: #4a6f92;
-	}
-
-	.submit:disabled {
-		opacity: 0.75;
-		pointer-events: none;
-	}
-
-	.spinner {
-		display: grid;
-		place-content: center;
-		animation: spin 1s both infinite;
-	}
-
-	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
-	.text-input {
-		font-size: 1.1rem;
-		font-family: 'Open Sans';
-		width: 100%;
+	.textarea {
 		padding: 1rem;
-		box-sizing: border-box;
-		border-radius: 0.25rem;
-		border: 2px solid transparent;
+		font-family: 'Open Sans';
+		font-size: 1rem;
 		background: rgba(128, 128, 128, 0.1);
-		color: currentColor;
-
-		transition: box-shadow 200ms;
+		color: var(--text);
+		outline: none;
+		border: 2px solid transparent;
+		border-radius: 0.25rem;
 	}
 
-	.text-input:focus {
+	.textarea:focus {
 		outline: none;
 		border-color: #888;
 		background: rgba(128, 128, 128, 0.2);
-	}
-
-	.text-input.invalid {
-		border: 2px solid var(--red);
-	}
-
-	.text-input.textarea {
-		max-width: 100%;
-		min-width: 100%;
-		min-height: 10rem;
-	}
-
-	.option {
-		position: relative;
-		border: 2px solid transparent;
-		border-radius: 0.35rem;
-		overflow: hidden;
-
-		transition: box-shadow 200ms;
-	}
-
-	.option.image {
-		height: 6rem;
-	}
-
-	.option .image-preview {
-		position: absolute;
-		height: 6rem;
-		right: 4rem;
-		pointer-events: none;
-		opacity: 0.95;
-	}
-
-	.option.invalid {
-		border-color: var(--red);
-	}
-
-	.option:focus-within {
-		border-color: #888;
-	}
-
-	.option.invalid:focus-within {
-		border-color: var(--red);
-		box-shadow: 0 0 0 5px var(--red-subtle);
-	}
-
-	.option .text-input:focus {
-		border-color: transparent;
-	}
-
-	.drag-handler {
-		left: 0;
-		min-height: 4rem;
-		padding: 0 0.15rem;
-		background: rgba(128, 128, 128, 0.2);
-		color: currentColor;
-		display: grid;
-		place-content: center;
-		border-right: 1px solid rgba(0, 0, 0, 0.05);
-
-		transition: padding 200ms;
-	}
-
-	.drag-handler:hover {
-		filter: brightness(0.95);
-	}
-
-	.text-input.no-left-border {
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
 	}
 
 	ul {
@@ -353,38 +186,6 @@
 	li {
 		list-style: none;
 		margin-bottom: 1rem;
-		display: flex;
-		position: relative;
-	}
-
-	.text-input {
-		padding-right: 4rem;
-	}
-
-	.delete {
-		width: 3.5rem;
-		height: calc(100% - 0.5rem);
-		font-size: 1.5rem;
-		display: grid;
-		place-content: center;
-		border: none;
-		background: none;
-		border-radius: 0.125rem;
-		margin: 0.25rem;
-		color: #888;
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
-
-	.delete:disabled {
-		visibility: hidden;
-	}
-
-	.delete:not(:disabled):hover {
-		background: rgba(238, 238, 238, 0.1);
-		color: currentColor;
-		cursor: pointer;
 	}
 
 	.options {
@@ -393,14 +194,14 @@
 		gap: 1rem;
 	}
 
+	.submit {
+		margin: 3rem 0;
+		display: flex;
+	}
+
 	@media screen and (max-width: 800px) {
 		.options {
 			grid-template-columns: 1fr;
-		}
-
-		.submit {
-			margin-left: auto;
-			margin-right: auto;
 		}
 	}
 

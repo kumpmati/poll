@@ -25,22 +25,24 @@
 			in:receive|local={{ key: id }}
 			out:send|local={{ key: id }}
 			animate:flip={{ duration: 200 }}
+			class="details"
 		>
-			<div class="details">
-				{#if text.startsWith('http')}
-					<img class="image" src={text} alt="" />
-				{:else}
-					<p class="text">
-						{text}
-					</p>
-				{/if}
-
-				<p class="percentage">
-					<b>{stats[id]}</b> <span>({calcPercentage(id).toFixed(0)} %)</span>
+			{#if text.startsWith('http')}
+				<img class="image" src={text} alt="" />
+			{:else}
+				<p class="text">
+					{text}
 				</p>
-			</div>
+			{/if}
 
-			<div class="bar" style={`width: ${calcPercentage(id)}%`} />
+			<div class="percentage">
+				<p>
+					<b class="number">{stats[id]}</b>
+					<span class="subtle">({calcPercentage(id).toFixed(0)} %)</span>
+				</p>
+
+				<div class="bar" style={`width: ${calcPercentage(id)}%`} />
+			</div>
 		</li>
 	{/each}
 </ul>
@@ -50,6 +52,9 @@
 		list-style: none;
 		color: var(--text);
 		padding: 0;
+
+		display: grid;
+		grid-template-columns: 1fr;
 	}
 
 	li {
@@ -58,13 +63,13 @@
 
 	.details {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		align-items: flex-start;
 		justify-content: space-between;
 	}
 
 	.image {
-		width: 80%;
-		max-width: 25rem;
+		width: 100%;
 		border-radius: 0.25rem;
 		margin: 0.5rem 0;
 	}
@@ -76,24 +81,39 @@
 	}
 
 	.percentage {
-		margin-left: 1rem;
-		color: var(--text);
+		position: relative;
+		width: 100%;
+		background: rgba(128, 128, 128, 0.1);
+		border-radius: 0.25rem;
 	}
 
-	.percentage > span {
-		color: var(--text-subtle);
+	.percentage p {
+		display: flex;
+		align-items: center;
+		position: absolute;
+		top: 50%;
+		left: 1rem;
+		transform: translateY(-50%);
+		margin: 0;
+		color: #fff;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 	}
 
-	/* Color first bar differently */
-	ul > li:first-of-type .bar {
-		background: rgb(104, 160, 212) !important;
+	.percentage p .number {
+		color: currentColor;
+		font-size: 1.5rem;
+		margin-right: 1ch;
+	}
+
+	.subtle {
+		opacity: 0.75;
 	}
 
 	.bar {
 		display: block;
 		height: 2.5rem;
 		border-radius: 0.25rem;
-		background-color: rgb(55, 85, 114);
+		background: var(--blue);
 		transition: width 200ms, background-color 200ms;
 	}
 </style>

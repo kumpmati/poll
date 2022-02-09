@@ -22,9 +22,10 @@
 <script lang="ts">
 	import type { Poll, Results as ResultsType } from '$lib/types/poll';
 	import { calculateStats } from '$lib/utils/stats';
-	import Results from '$lib/components/Results/Results.svelte';
+	import PollResults from '$lib/components/PollResults/PollResults.svelte';
 	import { onMount } from 'svelte';
 	import { connectSocketIO } from '$lib/utils/websocket';
+	import Button from '$lib/components/Button/Button.svelte';
 
 	export let poll: Poll;
 	export let results: ResultsType;
@@ -56,10 +57,10 @@
 	</div>
 </div>
 
-<Results {poll} {stats} />
+<PollResults {poll} {stats} />
 
 <div class="controls">
-	<a href={`/${poll.id}`} class="button">Back</a>
+	<Button priority="secondary" link={`/${poll.id}`}>Back</Button>
 </div>
 
 <style>
@@ -112,30 +113,6 @@
 
 	.controls {
 		margin-top: 5rem;
-	}
-
-	.button {
-		appearance: none;
-		margin-top: 1rem;
-		font-size: 1.35rem;
-		font-family: inherit;
-		border: none;
-		border-radius: 0.25rem;
-		padding: 0.75rem 1.5rem;
-		color: currentColor;
-		background: rgba(128, 128, 128, 0.25);
-		text-decoration: none;
-		text-align: center;
-	}
-
-	.button:disabled {
-		opacity: 0.75;
-		cursor: not-allowed;
-	}
-
-	.button:not(:disabled):hover {
-		cursor: pointer;
-		color: currentColor;
-		background: rgba(128, 128, 128, 0.4);
+		display: flex;
 	}
 </style>
