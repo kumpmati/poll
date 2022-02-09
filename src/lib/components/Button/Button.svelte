@@ -2,9 +2,9 @@
   import Refresh from '../Icons/refresh.svelte';
 
   export let priority: 'main' | 'secondary';
-  export let loading: boolean = false;
-  export let disabled: boolean = false;
-  export let link: string = '';
+  export let loading = false;
+  export let disabled = false;
+  export let link = '';
 </script>
 
 {#if link}

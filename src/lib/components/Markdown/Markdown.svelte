@@ -1,7 +1,7 @@
 <script lang="ts">
   import SvelteMarkdown from 'svelte-markdown';
 
-  export let value: string = '';
+  export let value = '';
 </script>
 
 <div class="markdown">

@@ -1,11 +1,11 @@
 <script lang="ts">
-  export let value: string = '';
-  export let required: boolean = false;
-  export let placeholder: string = '';
-  export let invalid: boolean = false;
-  export let className: string = '';
+  export let value = '';
+  export let required = false;
+  export let placeholder = '';
+  export let invalid = false;
+  export let className = '';
   export let size: 'normal' | 'large' = 'normal';
-  export let autofocus: boolean = false;
+  export let autofocus = false;
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->

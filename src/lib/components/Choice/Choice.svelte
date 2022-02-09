@@ -4,11 +4,11 @@
   import More from '../Icons/more-vertical.svelte';
   import Trash from '../Icons/trash.svelte';
 
-  export let value: string = '';
-  export let placeholder: string = '';
-  export let invalid: boolean = false;
-  export let required: boolean = false;
-  export let canDelete: boolean = false;
+  export let value = '';
+  export let placeholder = '';
+  export let invalid = false;
+  export let required = false;
+  export let canDelete = false;
 
   const dispatch = createEventDispatcher();
 </script>

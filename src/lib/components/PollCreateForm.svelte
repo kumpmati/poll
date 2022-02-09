@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Option as OptionType } from '$lib/types/poll';
+  import type { DndEvent } from 'svelte-dnd-action';
   import Plus from './Icons/plus.svelte';
   import Check from './Icons/check.svelte';
   import { flip } from 'svelte/animate';
@@ -7,24 +8,23 @@
   import { nanoid } from 'nanoid';
   import { dndzone } from 'svelte-dnd-action';
   import { goto } from '$app/navigation';
-  import Refresh from './Icons/refresh.svelte';
   import { copyToClipboard } from '$lib/utils/clipboard';
   import TextField from './TextField/TextField.svelte';
   import Choice from './Choice/Choice.svelte';
   import Button from './Button/Button.svelte';
 
-  let title: string = '';
-  let description: string = '';
+  let title = '';
+  let description = '';
   let options: OptionType[] = [
     { id: nanoid(), text: '' },
     { id: nanoid(), text: '' }
   ];
   let multipleChoice: boolean;
-  let maxChoices: number = 1;
-  let allowMultipleAnswers: boolean = false;
+  let maxChoices = 1;
+  let allowMultipleAnswers = false;
 
   // loading indicator for submit button
-  let loading: boolean = false;
+  let loading = false;
 
   const handleNewOption = () => {
     options = [...options, { id: nanoid(), text: '' }];

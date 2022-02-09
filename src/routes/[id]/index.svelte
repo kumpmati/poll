@@ -30,8 +30,8 @@
   export let poll: Poll;
 
   let selections: string[] = [];
-  let canSubmit: boolean = false;
-  let loading: boolean = false;
+  let canSubmit = false;
+  let loading = false;
 
   $: {
     if (browser) {
@@ -40,7 +40,7 @@
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!canSubmit) return;

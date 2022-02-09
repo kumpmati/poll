@@ -3,6 +3,7 @@
   export let label: string | undefined;
   export let type: string;
 
+  // set node type using an action because type cannot be dynamically assigned otherwise
   const useAction = (node: any) => {
     node.type = type;
   };
