@@ -1,15 +1,22 @@
+<script>
+  import Button from '$lib/components/Button/Button.svelte';
+</script>
+
 <svelte:head>
   <title>Not Found</title>
 </svelte:head>
 
-<div>
+<div class="container">
   <h1>What, not found? 😳</h1>
   <p>You probably have an invalid link or the poll doesn't exist anymore.</p>
-  <a href="/">Home</a>
+
+  <div class="button">
+    <Button priority="secondary" link="/">Home</Button>
+  </div>
 </div>
 
 <style>
-  div {
+  .container {
     position: relative;
     top: 30vh;
     display: block;
@@ -25,17 +32,9 @@
     color: var(--text-subtle);
   }
 
-  a {
-    position: relative;
-    top: 2rem;
-    background: rgba(128, 128, 128, 0.15);
-    text-decoration: none;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.25rem;
-    color: var(--text);
-  }
-
-  a:hover {
-    background: rgba(128, 128, 128, 0.25);
+  .button {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
   }
 </style>

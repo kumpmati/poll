@@ -171,6 +171,9 @@
     outline: none;
     border: 2px solid transparent;
     border-radius: 0.25rem;
+    max-width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
   }
 
   .textarea:focus {
