@@ -1,5 +1,5 @@
 <script context="module">
-  import { getPoll, getPollResults } from '$lib/utils/poll';
+  import { getPoll, getPollResults } from '$lib/utils/api';
 
   export const load = async ({ page }) => {
     const { id } = page.params;
@@ -21,7 +21,6 @@
 
 <script lang="ts">
   import type { Poll, Results as ResultsType } from '$lib/types/poll';
-  import { calculateStats } from '$lib/utils/stats';
   import PollResults from '$lib/components/PollResults/PollResults.svelte';
   import { onMount } from 'svelte';
   import { connectSocketIO } from '$lib/utils/websocket';
@@ -29,9 +28,6 @@
 
   export let poll: Poll;
   export let results: ResultsType;
-
-  // stats update when poll or results update
-  $: stats = calculateStats(poll, results);
 
   onMount(() => {
     connectSocketIO(results, poll.id).subscribe((value) => (results = value));
@@ -48,16 +44,13 @@
   <h2>Results</h2>
   <div class="numbers">
     <p>
-      <b>{stats.totalSubmissions}</b>
-      <span class="subtle">{stats.totalSubmissions === 1 ? 'submission' : 'submissions'}</span>
+      <b>{results.answers.length}</b>
+      <span class="subtle">{results?.answers.length === 1 ? 'submission' : 'submissions'}</span>
     </p>
-    {#if poll.maxChoices > 1}
-      <span class="subtle">({stats.totalSubmissionOptions} total options selected)</span>
-    {/if}
   </div>
 </div>
 
-<PollResults {poll} {stats} />
+<PollResults {poll} {results} />
 
 <div class="controls">
   <Button priority="secondary" link={`/${poll.id}`}>Back</Button>
@@ -114,5 +107,6 @@
   .controls {
     margin-top: 5rem;
     display: flex;
+    justify-content: flex-end;
   }
 </style>

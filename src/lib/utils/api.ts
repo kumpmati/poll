@@ -3,27 +3,13 @@ import { variables } from './env';
 
 const BASE_URL = variables.API_URL;
 
-export type PartialPoll = Pick<
-  Poll,
-  'title' | 'description' | 'options' | 'maxChoices' | 'allowMultipleAnswers'
->;
-
-export const createPoll = async (poll: PartialPoll): Promise<Poll> => {
-  const newPoll: Poll = {
-    ...poll,
-
-    // override these values
-    id: '',
-    created: new Date(),
-    requireAuth: false
-  };
-
+export const createPoll = async (poll: Poll): Promise<Poll> => {
   const response = await fetch(`${BASE_URL}/new`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(newPoll)
+    body: JSON.stringify(poll)
   });
 
   return await response.json();

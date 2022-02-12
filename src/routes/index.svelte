@@ -3,7 +3,7 @@
 </script>
 
 <script>
-  import PollCreateForm from '$lib/components/PollCreateForm.svelte';
+  import PollCreatorForm from '$lib/components/PollCreatorForm/PollCreatorForm.svelte';
 </script>
 
 <svelte:head>
@@ -12,7 +12,7 @@
 
 <h1>POLL</h1>
 
-<PollCreateForm />
+<PollCreatorForm />
 
 <style>
   h1 {

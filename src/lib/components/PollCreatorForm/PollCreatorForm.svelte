@@ -1,17 +1,18 @@
 <script lang="ts">
-  import type { Option as OptionType } from '$lib/types/poll';
+  import type { Option as OptionType, PollMode } from '$lib/types/poll';
   import type { DndEvent } from 'svelte-dnd-action';
-  import Plus from './Icons/plus.svelte';
-  import Check from './Icons/check.svelte';
+  import Plus from '../Icons/plus.svelte';
+  import Check from '../Icons/check.svelte';
   import { flip } from 'svelte/animate';
-  import { createPoll } from '$lib/utils/poll';
+  import { createPoll } from '$lib/utils/api';
   import { nanoid } from 'nanoid';
   import { dndzone } from 'svelte-dnd-action';
   import { goto } from '$app/navigation';
   import { copyToClipboard } from '$lib/utils/clipboard';
-  import TextField from './TextField/TextField.svelte';
-  import Choice from './Choice/Choice.svelte';
-  import Button from './Button/Button.svelte';
+  import TextField from '../TextField/TextField.svelte';
+  import Choice from '../Choice/Choice.svelte';
+  import Button from '../Button/Button.svelte';
+  import ModePicker from './Modes/ModePicker.svelte';
 
   let title = '';
   let description = '';
@@ -19,12 +20,16 @@
     { id: nanoid(), text: '' },
     { id: nanoid(), text: '' }
   ];
-  let multipleChoice: boolean;
-  let maxChoices = 1;
   let allowMultipleAnswers = false;
+  let mode: PollMode;
 
   // loading indicator for submit button
   let loading = false;
+
+  const handleUpdateMode = (e: CustomEvent) => {
+    mode = e.detail;
+    console.log('mode:', mode);
+  };
 
   const handleNewOption = () => {
     options = [...options, { id: nanoid(), text: '' }];
@@ -52,28 +57,33 @@
 
     loading = true;
     // send request to create poll
+
     const response = await createPoll({
+      id: '',
+      created: new Date(),
+      authToken: '',
+      requireAuth: false,
+      // user-controllable settings
+      allowMultipleAnswers,
       title,
       description,
       options,
-      allowMultipleAnswers,
-      // use max choices when in multiple choice mode, otherwise use 1
-      maxChoices: multipleChoice ? maxChoices : 1
+      mode
     });
     loading = false;
 
-    if (response?.id) {
-      // go to poll page
-      await goto(`/${response.id}`);
-
-      // copy link to clipboard automatically
-      await copyToClipboard(`https://poll.matsku.dev/${response.id}`).catch(() =>
-        console.warn('could not copy to clipboard')
-      );
+    if (!response?.id) {
+      alert('Hmmm, could not create poll 🤔');
       return;
     }
 
-    alert('Hmmm, could not create poll 🤔');
+    // go to poll page
+    await goto(`/${response.id}`);
+
+    // copy link to clipboard automatically
+    await copyToClipboard(`https://poll.matsku.dev/${response.id}`).catch(() =>
+      console.warn('could not copy to clipboard')
+    );
   };
 </script>
 
@@ -87,12 +97,14 @@
     invalid={title.trim() === ''}
   />
 
-  <h2>Description (optional)</h2>
+  <textarea
+    class="textarea"
+    bind:value={description}
+    placeholder="Description here (supports Markdown)"
+  />
 
-  <textarea class="textarea" bind:value={description} />
-
-  <h2>Choices</h2>
   <ul
+    class="options"
     use:dndzone={{ items: options, flipDurationMs: 200 }}
     on:consider={handleConsider}
     on:finalize={handleFinalize}
@@ -115,21 +127,10 @@
     Add choice <Plus />
   </Button>
 
-  <h2>Options</h2>
-  <div class="options">
-    <div class="maxChoices">
-      <label>
-        <input type="checkbox" bind:checked={multipleChoice} />
-        Multiple choice
-      </label>
+  <h2>Settings</h2>
+  <div class="settings">
+    <ModePicker on:changed={handleUpdateMode} />
 
-      {#if multipleChoice}
-        <label>
-          <input type="number" min={1} max={100} bind:value={maxChoices} />
-          Max number of choices
-        </label>
-      {/if}
-    </div>
     <div class="multipleSubmissions">
       <label>
         <input type="checkbox" bind:checked={allowMultipleAnswers} />
@@ -163,6 +164,7 @@
   }
 
   .textarea {
+    margin-top: 3rem;
     padding: 1rem;
     font-family: 'Open Sans';
     font-size: 1rem;
@@ -192,9 +194,12 @@
   }
 
   .options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    margin-top: 4rem;
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: column;
   }
 
   .submit {
@@ -203,14 +208,9 @@
   }
 
   @media screen and (max-width: 800px) {
-    .options {
+    .settings {
       grid-template-columns: 1fr;
     }
-  }
-
-  .maxChoices {
-    display: flex;
-    flex-direction: column;
   }
 
   label {
@@ -229,11 +229,5 @@
     min-width: 1.5rem;
     height: 1.5rem;
     margin-right: 0.5rem;
-  }
-
-  label > input[type='number'] {
-    margin-right: 1rem;
-    font-size: 1.25rem;
-    width: 4ch;
   }
 </style>

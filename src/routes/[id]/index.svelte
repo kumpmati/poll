@@ -1,5 +1,5 @@
 <script context="module">
-  import { getPoll, submitAnswer } from '$lib/utils/poll';
+  import { getPoll, submitAnswer } from '$lib/utils/api';
 
   export const load = async ({ page }) => {
     const { id } = page.params;
@@ -25,6 +25,8 @@
   import { nanoid } from 'nanoid';
   import Button from '$lib/components/Button/Button.svelte';
   import Markdown from '$lib/components/Markdown/Markdown.svelte';
+  import Check from '$lib/components/Icons/check.svelte';
+  import OrderGroup from '$lib/components/form/OrderGroup.svelte';
 
   export let id: string;
   export let poll: Poll;
@@ -73,27 +75,32 @@
 
 <div class="settings">
   <p>
-    {poll.allowMultipleAnswers ? 'Multiple submissions allowed' : 'One submission per person'}
+    Mode: <b>{poll.mode.type}</b>
   </p>
   <p>
-    {poll.maxChoices > 1 ? `Multiple choice (max ${poll.maxChoices} choices)` : 'Single choice'}
+    {poll.allowMultipleAnswers ? 'Multiple submissions allowed' : 'One submission per person'}
   </p>
 </div>
 
 <form on:submit={handleSubmit}>
-  {#if poll.maxChoices === 1}
-    <RadioGroup options={poll.options} bind:selection={selections} />
-  {:else}
-    <CheckboxGroup
-      maxChoices={poll.maxChoices}
-      options={poll.options}
-      bind:selection={selections}
-    />
+  {#if poll.mode.type === 'choice'}
+    {#if poll.mode.maxChoices === 1}
+      <RadioGroup options={poll.options} bind:selection={selections} />
+    {:else}
+      <CheckboxGroup
+        maxChoices={poll.mode.maxChoices}
+        options={poll.options}
+        bind:selection={selections}
+      />
+    {/if}
+  {:else if poll.mode.type === 'order'}
+    <OrderGroup options={poll.options} bind:selection={selections} />
   {/if}
 
   <div class="controls">
     <Button priority="main" {loading} disabled={!canSubmit}>
       {canSubmit ? 'Submit' : 'Submitted'}
+      <Check />
     </Button>
 
     <Button priority="secondary" link={`./${id}/results`}>Results</Button>
@@ -130,6 +137,7 @@
   .controls {
     margin-top: 3rem;
     display: flex;
+    justify-content: flex-end;
     gap: 1rem;
   }
 

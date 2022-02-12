@@ -35,6 +35,7 @@
     border-radius: 0.35rem;
     overflow: hidden;
     display: flex;
+    backdrop-filter: blur(15px);
 
     transition: box-shadow 200ms;
   }
