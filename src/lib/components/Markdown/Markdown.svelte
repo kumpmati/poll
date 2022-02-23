@@ -21,7 +21,7 @@
   .markdown :global(h6) {
     color: var(--text);
     font-family: 'Open Sans' !important;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .markdown :global(img) {

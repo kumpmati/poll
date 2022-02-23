@@ -7,8 +7,8 @@
   export let results: Results;
 </script>
 
-{#if poll.mode.type === 'choice'}
+{#if poll.mode?.type === 'choice'}
   <ChoiceResults {poll} {results} />
-{:else if poll.mode.type === 'order'}
+{:else if poll.mode?.type === 'order'}
   <OrderResults {poll} {results} />
 {/if}

@@ -8,7 +8,7 @@
     if (!poll) return;
 
     const results = await getPollResults(id).catch(() => null);
-    if (!results) return;
+    if (results?.status === 404) return;
 
     return {
       props: {
@@ -59,7 +59,8 @@
 <style>
   h1 {
     font-family: 'Urbanist';
-    font-size: 4rem;
+    font-size: 3.25rem;
+    font-weight: 900;
     margin-top: 8rem;
     word-wrap: break-word;
     hyphens: auto;
@@ -67,7 +68,7 @@
 
   @media screen and (max-width: 700px) {
     h1 {
-      font-size: 2.5rem !important;
+      font-size: 2.5rem;
     }
   }
 
@@ -93,11 +94,6 @@
 
   .numbers {
     text-align: right;
-  }
-
-  h1 {
-    font-size: 4rem;
-    font-weight: 400;
   }
 
   p {

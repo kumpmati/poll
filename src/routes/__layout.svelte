@@ -3,7 +3,12 @@
 </main>
 
 <style global>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Urbanist:wght@400;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Urbanist:wght@500;900&display=swap');
+
+  :root {
+    --font-family-heading: 'Urbanist', sans-serif;
+    --font-family-body: 'Open Sans', sans-serif;
+  }
 
   body {
     font-family: 'Open Sans';
@@ -26,8 +31,9 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :global(:root) {
+    :root {
       --background: #000;
+      --modal-background: #222;
       --text: #dddddd;
       --text-subtle: #aaa;
       --text-inverted: #222;
@@ -42,8 +48,9 @@
   }
 
   @media (prefers-color-scheme: light) {
-    :global(:root) {
+    :root {
       --background: #fff;
+      --modal-background: #ddd;
       --text: #333;
       --text-subtle: #555;
       --text-inverted: #eee;

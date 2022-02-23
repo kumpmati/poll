@@ -78,7 +78,7 @@
     }
 
     // go to poll page
-    await goto(`/${response.id}`);
+    await goto(`/${response.id}/share`);
 
     // copy link to clipboard automatically
     await copyToClipboard(`https://poll.matsku.dev/${response.id}`).catch(() =>
@@ -155,7 +155,7 @@
 
   h2 {
     margin-top: 4rem;
-    font-weight: 800;
+    font-weight: 900;
   }
 
   ul {

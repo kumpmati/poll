@@ -1,11 +1,11 @@
 <script context="module">
-  import { getPoll, submitAnswer } from '$lib/utils/api';
+  import { getPoll } from '$lib/utils/api';
 
   export const load = async ({ page }) => {
     const { id } = page.params;
 
     const poll = await getPoll(id).catch(() => null);
-    if (!poll) return;
+    if (poll?.status === 404) return;
 
     return {
       props: {
@@ -18,6 +18,7 @@
 
 <script lang="ts">
   import type { Poll } from '$lib/types/poll';
+  import { submitAnswer } from '$lib/utils/api';
   import { goto } from '$app/navigation';
   import RadioGroup from '$lib/components/form/RadioGroup.svelte';
   import CheckboxGroup from '$lib/components/form/CheckboxGroup.svelte';
@@ -75,15 +76,15 @@
 
 <div class="settings">
   <p>
-    Mode: <b>{poll.mode.type}</b>
+    Mode: <b>{poll.mode?.type}</b>
   </p>
   <p>
     {poll.allowMultipleAnswers ? 'Multiple submissions allowed' : 'One submission per person'}
   </p>
 </div>
 
-<form on:submit={handleSubmit}>
-  {#if poll.mode.type === 'choice'}
+<form on:submit|preventDefault>
+  {#if poll.mode?.type === 'choice'}
     {#if poll.mode.maxChoices === 1}
       <RadioGroup options={poll.options} bind:selection={selections} />
     {:else}
@@ -93,26 +94,28 @@
         bind:selection={selections}
       />
     {/if}
-  {:else if poll.mode.type === 'order'}
+  {:else if poll.mode?.type === 'order'}
     <OrderGroup options={poll.options} bind:selection={selections} />
   {/if}
 
   <div class="controls">
-    <Button priority="main" {loading} disabled={!canSubmit}>
+    <Button priority="main" {loading} on:click={handleSubmit} disabled={!canSubmit}>
       {canSubmit ? 'Submit' : 'Submitted'}
       <Check />
     </Button>
 
-    <Button priority="secondary" link={`./${id}/results`}>Results</Button>
+    <Button priority="secondary" link="/{id}/results">Results</Button>
   </div>
 </form>
 
 <style>
   h1 {
     font-family: 'Urbanist';
+    font-size: 3.25rem;
+    font-weight: 900;
     margin-top: 8rem;
-    font-size: 4rem;
-    font-weight: 400;
+    word-wrap: break-word;
+    hyphens: auto;
   }
 
   .settings {
@@ -126,7 +129,7 @@
 
   @media screen and (max-width: 700px) {
     h1 {
-      font-size: 3.25rem;
+      font-size: 2.5rem;
     }
 
     .controls {

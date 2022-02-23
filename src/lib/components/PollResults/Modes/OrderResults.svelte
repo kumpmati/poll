@@ -103,7 +103,7 @@
     height: 4rem;
     margin-bottom: auto;
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 900;
     color: currentColor;
     display: flex;
     align-items: center;

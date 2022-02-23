@@ -10,7 +10,7 @@
   <title>Poll</title>
 </svelte:head>
 
-<h1>POLL</h1>
+<h1>Create poll</h1>
 
 <PollCreatorForm />
 
@@ -18,6 +18,6 @@
   h1 {
     font-family: 'Urbanist';
     font-size: 5rem;
-    font-weight: 400;
+    font-weight: 900;
   }
 </style>

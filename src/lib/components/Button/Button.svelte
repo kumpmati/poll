@@ -21,7 +21,7 @@
     {/if}
   </a>
 {:else}
-  <button class={`button ${priority}`} on:click {disabled}>
+  <button type="button" class={`button ${priority}`} on:click {disabled}>
     <span class="content" class:hidden={loading}>
       <slot />
     </span>

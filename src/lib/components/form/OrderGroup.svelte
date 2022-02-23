@@ -73,7 +73,7 @@
     min-height: 4rem;
     min-width: 4rem;
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 900;
     color: currentColor;
     display: flex;
     align-items: center;
