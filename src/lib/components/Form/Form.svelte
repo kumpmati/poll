@@ -5,8 +5,8 @@
   import Description from './Description/Description.svelte';
   import Choices from './Choices/Choices.svelte';
   import Settings from './Settings/Settings.svelte';
-  import { validateFormFields } from '$lib/utils/form';
   import { createEventDispatcher } from 'svelte';
+  import { validateFormFields } from '$lib/utils/form';
 
   export let loading: boolean;
 

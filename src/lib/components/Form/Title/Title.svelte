@@ -3,7 +3,10 @@
 </script>
 
 <label class="flex flex-col">
+  <!--
   <span class="font-extrabold text-neutral-300 dark:text-neutral-500">Title</span>
+  -->
+
   <!-- svelte-ignore a11y-autofocus -->
   <input
     autofocus

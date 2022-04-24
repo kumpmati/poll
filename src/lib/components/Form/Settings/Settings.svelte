@@ -15,8 +15,10 @@
   }
 </script>
 
-<div class="flex flex-col gap-5 sm:gap-2">
-  <span class="font-extrabold text-neutral-400 dark:text-neutral-500">Settings</span>
+<div class="flex flex-col gap-5 mt-4 sm:gap-2">
+  <!--
+    <span class="font-extrabold text-neutral-400 dark:text-neutral-500">Settings</span>
+  -->
 
   <div class="flex flex-row gap-2 justify-between items-start">
     <p class="font-extrabold text-lg">Allow multiple submissions</p>

@@ -27,7 +27,10 @@
 </script>
 
 <div class="flex flex-col gap-2">
+  <!--
   <span class="font-extrabold text-neutral-400 dark:text-neutral-500">Choices</span>
+  -->
+
   <ul
     class="flex flex-col gap-2 rounded-md"
     use:dndzone={{ items: choices, dropTargetStyle: {} }}
