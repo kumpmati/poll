@@ -3,38 +3,29 @@ export type Poll = {
   title: string;
   description?: string;
   created: Date;
-  options: Option[];
-  mode: PollMode;
-  requireAuth: boolean;
-  allowMultipleAnswers: boolean;
-  authToken?: string;
+  choices: Choice[];
+  settings: {
+    mode: 'order' | 'choice';
+    minChoices: number;
+    maxChoices: number;
+    allowMultipleAnswers: boolean;
+  };
 };
 
-export type PollMode = ChoiceMode | OrderMode;
-
-export type ChoiceMode = {
-  type: 'choice';
-  maxChoices: number;
-  minChoices: number;
+export type Choice = {
+  id: string;
+  text: string;
 };
 
-export type OrderMode = {
-  type: 'order';
-};
-
+/* Results of a poll */
 export type Results = {
   id: string;
   answers: Answer[];
 };
 
-export type Option = {
-  id: string;
-  text: string;
-};
-
 export type Answer = {
   id: string;
   uid: string | null;
-  options: string[];
+  selected: string[];
   submitted: Date;
 };

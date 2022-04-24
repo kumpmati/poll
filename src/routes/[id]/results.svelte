@@ -1,108 +1,43 @@
-<script context="module">
-  import { getPoll, getPollResults } from '$lib/utils/api';
-
-  export const load = async ({ page }) => {
-    const { id } = page.params;
-
-    const poll = await getPoll(id).catch(() => null);
-    if (!poll) return;
-
-    const results = await getPollResults(id).catch(() => null);
-    if (results?.status === 404) return;
-
-    return {
-      props: {
-        poll,
-        results
-      }
-    };
-  };
-</script>
-
 <script lang="ts">
-  import type { Poll, Results as ResultsType } from '$lib/types/poll';
-  import PollResults from '$lib/components/PollResults/PollResults.svelte';
-  import { onMount } from 'svelte';
+  import type { Poll, Results } from '$lib/types/poll';
+  import ChoiceStats from '$lib/components/Stats/ChoiceStats.svelte';
+  import OrderStats from '$lib/components/Stats/OrderStats.svelte';
+  import { calculateChoiceStats, calculateOrderStats } from '$lib/utils/stats';
   import { connectSocketIO } from '$lib/utils/websocket';
-  import Button from '$lib/components/Button/Button.svelte';
+  import { onMount } from 'svelte';
 
   export let poll: Poll;
-  export let results: ResultsType;
+  export let results: Results;
+
+  let stats =
+    poll.settings.mode === 'order'
+      ? calculateOrderStats(poll, results)
+      : calculateChoiceStats(poll, results);
 
   onMount(() => {
-    connectSocketIO(results, poll.id).subscribe((value) => (results = value));
+    // listen to updates to results
+    connectSocketIO(results, poll.id).subscribe((newResults) => {
+      if (poll.settings.mode === 'order') {
+        stats = calculateOrderStats(poll, newResults);
+      } else {
+        stats = calculateChoiceStats(poll, newResults);
+      }
+    });
   });
 </script>
 
-<svelte:head>
-  <title>Results - {poll.title}</title>
-</svelte:head>
+<div class="relative top-[50vh] -translate-y-1/2">
+  <h1 class="font-extrabold text-4xl mb-10 text-neutral-700 dark:text-neutral-300">{poll.title}</h1>
 
-<h1>{poll.title}</h1>
+  <p class="text-right text-neutral-400 dark:text-neutral-500">
+    <span class="text-lg font-extrabold text-neutral-600 dark:text-neutral-300"
+      >{stats.totalSubmissions}</span
+    > submissions
+  </p>
 
-<div class="subtitle">
-  <h2>Results</h2>
-  <div class="numbers">
-    <p>
-      <b>{results.answers.length}</b>
-      <span class="subtle">{results?.answers.length === 1 ? 'submission' : 'submissions'}</span>
-    </p>
-  </div>
+  {#if poll.settings.mode === 'order'}
+    <OrderStats {poll} {stats} />
+  {:else}
+    <ChoiceStats {poll} {stats} />
+  {/if}
 </div>
-
-<PollResults {poll} {results} />
-
-<div class="controls">
-  <Button priority="secondary" link={`/${poll.id}`}>Back</Button>
-</div>
-
-<style>
-  h1 {
-    font-family: 'Urbanist';
-    font-size: 3.25rem;
-    font-weight: 900;
-    margin-top: 8rem;
-    word-wrap: break-word;
-    hyphens: auto;
-  }
-
-  @media screen and (max-width: 700px) {
-    h1 {
-      font-size: 2.5rem;
-    }
-  }
-
-  .subtitle {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    color: var(--text-subtle);
-  }
-
-  .subtitle h2 {
-    font-family: 'Urbanist';
-    margin-right: 1rem;
-  }
-
-  .subtitle p {
-    color: var(--text);
-  }
-
-  .subtle {
-    color: var(--text-subtle);
-  }
-
-  .numbers {
-    text-align: right;
-  }
-
-  p {
-    margin: 0;
-  }
-
-  .controls {
-    margin-top: 5rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-</style>

@@ -1,63 +1,23 @@
 <script lang="ts">
   import { page } from '$app/stores';
 
-  import Button from '$lib/components/Button/Button.svelte';
-  import QrCode from '$lib/components/QrCode/QrCode.svelte';
-
-  let link = `https://poll.matsku.dev/${$page.params.id}`;
+  const link = `https://poll.matsku.dev/${$page.params.id}`;
 </script>
 
-<h1>Share</h1>
+<div class="relative flex flex-col items-center top-[50vh] -translate-y-1/2">
+  <h1 class="font-extrabold text-5xl sm:text-6xl mb-4">Share</h1>
 
-<div class="qrCode">
-  <QrCode codeValue={link} squareSize={250} />
+  <img
+    class="w-3/4 max-w-xs rounded-md"
+    src="https://chart.googleapis.com/chart?cht=qr&chs=256x256&chld=L|1&chl={link}"
+    width={128}
+    height={128}
+    alt="QR code"
+  />
+
+  <a
+    href="/{$page.params.id}"
+    class="px-6 py-3 font-extrabold text-md mt-4 rounded-md dark:bg-neutral-700 hover:dark:bg-neutral-600"
+    >Go to poll</a
+  >
 </div>
-
-<input class="text-input" readonly type="text" value={link} />
-
-<div class="controls">
-  <Button priority="secondary" link="/{$page.params.id}">Go to poll</Button>
-</div>
-
-<style>
-  h1 {
-    font-family: var(--font-family-heading);
-    margin-top: 8rem;
-    font-size: 4rem;
-    font-weight: 900;
-    text-align: center;
-  }
-
-  .text-input {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-family-heading);
-    font-weight: 500;
-    width: fit-content;
-    min-width: 26ch;
-    text-align: center;
-    padding: 0.5rem;
-    font-size: 1.25rem;
-  }
-
-  .controls {
-    display: flex;
-    margin-top: 3rem;
-    justify-content: center;
-  }
-
-  .qrCode {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-    width: 100%;
-  }
-
-  @media screen and (max-width: 700px) {
-    .text-input {
-      min-width: 23ch;
-      font-size: 1.125rem;
-    }
-  }
-</style>
