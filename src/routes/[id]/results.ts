@@ -5,14 +5,15 @@ export const get: RequestHandler<{ id: string }> = async ({ params }) => {
   const poll = await getPoll(params.id);
   const results = await getPollResults(params.id);
 
-  if (!poll) {
+  if (!poll || !results) {
     return {
       status: 404,
-      message: 'poll not found'
+      error: new Error('poll not found')
     };
   }
 
   return {
+    status: 200,
     body: {
       poll,
       results

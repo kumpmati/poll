@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Poll } from '$lib/types/poll';
   import { nanoid } from 'nanoid';
-  import Title from './Title.svelte';
-  import Description from './Description.svelte';
-  import Choices from './Choices.svelte';
+  import Title from './Title/Title.svelte';
+  import Description from './Description/Description.svelte';
+  import Choices from './Choices/Choices.svelte';
   import Settings from './Settings/Settings.svelte';
   import { validateFormFields } from '$lib/utils/form';
   import { createEventDispatcher } from 'svelte';

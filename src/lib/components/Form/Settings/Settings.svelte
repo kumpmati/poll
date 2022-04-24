@@ -15,16 +15,16 @@
   }
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-5 sm:gap-2">
   <span class="font-extrabold text-neutral-400 dark:text-neutral-500">Settings</span>
 
-  <div class="flex flex-row justify-between items-center">
+  <div class="flex flex-row gap-2 justify-between items-start">
     <p class="font-extrabold text-lg">Allow multiple submissions</p>
 
     <div class="flex gap-2">
       <label
         title="A single user can submit multiple times"
-        class="pt-1 pb-1 w-20 text-center cursor-pointer rounded-md {settings.allowMultipleAnswers
+        class="pt-1 pb-1 w-20 cursor-pointer text-center rounded-md {settings.allowMultipleAnswers
           ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
           : null}"
       >
@@ -39,7 +39,7 @@
       </label>
       <label
         title="A single user can only submit once"
-        class="pt-1 pb-1 w-20 text-center cursor-pointer rounded-md {!settings.allowMultipleAnswers
+        class="pt-1 pb-1 w-20 cursor-pointer text-center rounded-md {!settings.allowMultipleAnswers
           ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
           : null}"
       >
@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  <div class="flex flex-row justify-between items-center">
+  <div class="flex flex-row gap-2 justify-between items-start">
     <p class="font-extrabold text-lg">Submission mode</p>
 
     <div class="flex gap-2">
@@ -85,7 +85,7 @@
   {#if settings.mode === 'choice'}
     <div
       transition:fly|local={{ y: -10, duration: 200 }}
-      class="flex flex-row justify-between items-center"
+      class="flex flex-row gap-2 justify-between items-start"
     >
       <p class="font-extrabold text-lg">Number of required choices</p>
 
@@ -129,33 +129,29 @@
   {#if settings.mode === 'choice' && multipleChoice}
     <div
       transition:fly|local={{ y: -10, duration: 200 }}
-      class="flex flex-row justify-between items-center"
+      class="flex flex-row justify-center sm:justify-end gap-4"
     >
-      <br />
+      <label class="flex flex-row items-center gap-2">
+        Min
+        <input
+          type="number"
+          min={0}
+          max={settings.maxChoices}
+          bind:value={settings.minChoices}
+          class="rounded-md p-1 pr-0 pl-3 w-14 font-extrabold bg-neutral-200 dark:bg-neutral-700 text-base font-main"
+        />
+      </label>
 
-      <div class="flex flex-col items-end sm:flex-row gap-4">
-        <label class="flex flex-row items-center gap-2">
-          Min
-          <input
-            type="number"
-            min={0}
-            max={settings.maxChoices}
-            bind:value={settings.minChoices}
-            class="rounded-md p-1 pr-0 pl-3 w-14 text-center font-extrabold bg-neutral-200 dark:bg-neutral-700 text-base font-main"
-          />
-        </label>
-
-        <label class="flex flex-row items-center gap-2">
-          Max
-          <input
-            type="number"
-            min={Math.max(settings.minChoices, 1)}
-            max={choices.length}
-            bind:value={settings.maxChoices}
-            class="rounded-md p-1 pr-0 pl-3 w-14 text-center font-extrabold bg-neutral-200 dark:bg-neutral-700 text-base font-main"
-          />
-        </label>
-      </div>
+      <label class="flex flex-row items-center gap-2">
+        Max
+        <input
+          type="number"
+          min={Math.max(settings.minChoices, 1)}
+          max={choices.length}
+          bind:value={settings.maxChoices}
+          class="rounded-md p-1 pr-0 pl-3 w-14 font-extrabold bg-neutral-200 dark:bg-neutral-700 text-base font-main"
+        />
+      </label>
     </div>
   {/if}
 </div>

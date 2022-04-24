@@ -7,11 +7,12 @@ export const get: RequestHandler<{ id: string }> = async ({ params }) => {
   if (!poll) {
     return {
       status: 404,
-      message: 'poll not found'
+      error: new Error('page not found')
     };
   }
 
   return {
+    status: 200,
     body: { poll }
   };
 };

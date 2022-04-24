@@ -17,7 +17,7 @@
     loading = false;
 
     if (response.id) {
-      await goto('/' + response.id);
+      await goto(`/${response.id}/share`);
     } else {
       console.error('something went wrong', response);
     }
@@ -28,6 +28,6 @@
   <title>poll</title>
 </svelte:head>
 
-<div class="relative top-[10rem]">
+<div class="relative mt-[10rem] mb-20">
   <Form on:submit={onSubmit} {loading} />
 </div>

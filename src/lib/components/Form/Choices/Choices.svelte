@@ -3,9 +3,9 @@
   import { flip } from 'svelte/animate';
   import { nanoid } from 'nanoid';
   import { dndzone } from 'svelte-dnd-action';
-  import X from '../Icons/x.svelte';
-  import MoreVertical from '../Icons/more-vertical.svelte';
-  import Plus from '../Icons/plus.svelte';
+  import X from '$lib/components/Icons/x.svelte';
+  import MoreVertical from '$lib/components/Icons/more-vertical.svelte';
+  import Plus from '$lib/components/Icons/plus.svelte';
 
   export let choices: Choice[];
 
@@ -34,7 +34,7 @@
     on:consider={onConsider}
     on:finalize={onFinalize}
   >
-    {#each choices as choice (choice.id)}
+    {#each choices as choice, index (choice.id)}
       <li
         animate:flip={{ duration: 200 }}
         class="relative flex p-0 pl-0 rounded-md w-full items-center overflow-hidden bg-neutral-200 dark:bg-neutral-700"
@@ -44,6 +44,7 @@
           type="text"
           class="w-full p-3 bg-transparent outline-none"
           required
+          placeholder="Choice {index + 1}"
           on:keydown={(e) => (e.key === 'Enter' ? e.preventDefault() : null)}
           bind:value={choice.text}
         />

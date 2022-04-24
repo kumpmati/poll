@@ -5,6 +5,7 @@
   import { calculateChoiceStats, calculateOrderStats } from '$lib/utils/stats';
   import { connectSocketIO } from '$lib/utils/websocket';
   import { onMount } from 'svelte';
+  import Markdown from '$lib/components/Markdown/Markdown.svelte';
 
   export let poll: Poll;
   export let results: Results;
@@ -26,14 +27,35 @@
   });
 </script>
 
-<div class="relative top-[50vh] -translate-y-1/2">
-  <h1 class="font-extrabold text-4xl mb-10 text-neutral-700 dark:text-neutral-300">{poll.title}</h1>
+<div class="relative mt-[10rem] mb-20">
+  <h1 class="font-extrabold text-4xl mb-4 text-neutral-700 dark:text-neutral-300">{poll.title}</h1>
 
-  <p class="text-right text-neutral-400 dark:text-neutral-500">
-    <span class="text-lg font-extrabold text-neutral-600 dark:text-neutral-300"
-      >{stats.totalSubmissions}</span
-    > submissions
-  </p>
+  {#if poll.description}
+    <Markdown value={poll.description} />
+  {/if}
+
+  <div class="flex justify-between items-center mt-4 mb-8">
+    <p class="font-extrabold text-neutral-300">
+      {#if poll.settings.mode === 'choice'}
+        Choose
+        {#if poll.settings.maxChoices === 1}
+          one
+        {:else if poll.settings.maxChoices !== poll.settings.minChoices}
+          {poll.settings.minChoices}-{poll.settings.maxChoices}
+        {:else}
+          {poll.settings.maxChoices}
+        {/if}
+      {:else}
+        Order
+      {/if}
+    </p>
+
+    <p class="text-right text-neutral-400 dark:text-neutral-500">
+      <span class="text-lg font-extrabold text-neutral-600 dark:text-neutral-300"
+        >{stats.totalSubmissions}</span
+      > submissions
+    </p>
+  </div>
 
   {#if poll.settings.mode === 'order'}
     <OrderStats {poll} {stats} />

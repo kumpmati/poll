@@ -15,16 +15,18 @@ export const createPoll = async (poll: Poll): Promise<Poll> => {
   return await response.json();
 };
 
-export const getPoll = async (id: string): Promise<Poll> => {
+export const getPoll = async (id: string): Promise<Poll | null> => {
   const response = await fetch(`${BASE_URL}/poll/${id}`);
+  const data = await response.json();
 
-  return await response.json();
+  return data.status === 404 ? null : data;
 };
 
-export const getPollResults = async (id: string): Promise<Results> => {
+export const getPollResults = async (id: string): Promise<Results | null> => {
   const response = await fetch(`${BASE_URL}/poll/${id}/results`);
+  const data = await response.json();
 
-  return await response.json();
+  return data.status === 404 ? null : data;
 };
 
 export const submitAnswer = async (
