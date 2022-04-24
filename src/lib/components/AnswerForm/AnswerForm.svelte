@@ -9,6 +9,7 @@
 
   export let poll: Poll;
   export let loading: boolean;
+  export let canSubmit: boolean;
 
   let selections = poll?.settings?.mode === 'order' ? [...poll.choices] : [];
   $: selectionsFull = selections.length >= poll.settings.maxChoices;
@@ -107,11 +108,13 @@
   <button
     on:click={onSubmit}
     type="button"
-    disabled={selections.length < poll.settings.minChoices || loading}
-    class="font-extrabold flex flex-row gap-2 justify-center py-3 px-8 pr-10 w-max mt-6 mx-auto bg-neutral-200 dark:bg-neutral-700 rounded-md disabled:opacity-50"
+    disabled={!canSubmit || loading || selections.length < poll.settings.minChoices}
+    class="font-extrabold flex flex-row gap-2 justify-center py-3 px-8 w-max mt-6 mx-auto bg-neutral-200 dark:bg-neutral-700 rounded-md disabled:opacity-50"
   >
     {#if loading}
       <span class="spinner"><Refresh /></span> Submitting
+    {:else if !canSubmit}
+      Already submitted
     {:else if selections.length < poll.settings.minChoices}
       {`Choose ${poll.settings.minChoices - selections.length} more`}
     {:else}

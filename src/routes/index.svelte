@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-  <title>poll</title>
+  <title>Poll</title>
 </svelte:head>
 
 <div class="relative mt-[10rem] mb-20">

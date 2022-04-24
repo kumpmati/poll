@@ -36,6 +36,7 @@
   "dependencies": {
     "nanoid": "^3.2.0",
     "socket.io-client": "^4.4.1",
+    "svelte-local-storage-store": "^0.2.6",
     "svelte-qrcode": "^1.0.0"
   }
 }

@@ -5,10 +5,14 @@
   import { nanoid } from 'nanoid';
   import { goto } from '$app/navigation';
   import Markdown from '$lib/components/Markdown/Markdown.svelte';
+  import { createSubmissionHistory } from '$lib/utils/form';
 
   export let poll: Poll;
 
+  const submissionHistory = createSubmissionHistory();
+
   let loading = false;
+  let canSubmit = poll.settings.allowMultipleAnswers ? true : !$submissionHistory[poll.id];
 
   const onSubmit = async (e: CustomEvent<Choice[]>) => {
     loading = true;
@@ -18,6 +22,7 @@
     const response = await submitAnswer(poll.id, selectionIds, userId);
 
     if (response.success) {
+      submissionHistory.setSubmitted(poll.id);
       await goto(`/${poll.id}/results`);
     }
 
@@ -30,11 +35,11 @@
 </svelte:head>
 
 <div class="relative mt-[10rem] mb-20">
-  <h1 class="font-extrabold text-4xl text-neutral-700 dark:text-neutral-300">{poll.title}</h1>
+  <h1 class="font-extrabold text-4xl mb-4 text-neutral-700 dark:text-neutral-300">{poll.title}</h1>
 
   {#if poll.description}
     <Markdown value={poll.description} />
   {/if}
 
-  <AnswerForm {poll} on:submit={onSubmit} {loading} />
+  <AnswerForm {poll} on:submit={onSubmit} {loading} {canSubmit} />
 </div>

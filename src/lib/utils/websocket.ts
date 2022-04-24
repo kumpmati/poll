@@ -1,4 +1,3 @@
-import { browser } from '$app/env';
 import type { Answer, Results } from '$lib/types/poll';
 import { readable } from 'svelte/store';
 import type { Readable } from 'svelte/store';
@@ -6,8 +5,6 @@ import { config } from '$lib/config';
 import { io } from 'socket.io-client';
 
 export const connectSocketIO = (initialData: Results, pollId: string): Readable<Results> => {
-  if (!browser) return; // only run client side
-
   const socket = io(`${config.WS_URL}/poll?id=${pollId}`);
 
   let data: Results = initialData;

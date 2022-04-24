@@ -27,6 +27,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Results - {poll.title}</title>
+</svelte:head>
+
 <div class="relative mt-[10rem] mb-20">
   <h1 class="font-extrabold text-4xl mb-4 text-neutral-700 dark:text-neutral-300">{poll.title}</h1>
 

@@ -4,6 +4,10 @@
   const link = `https://poll.matsku.dev/${$page.params.id}`;
 </script>
 
+<svelte:head>
+  <title>Share poll</title>
+</svelte:head>
+
 <div class="relative flex flex-col items-center top-[50vh] -translate-y-1/2">
   <h1 class="font-extrabold text-5xl sm:text-6xl mb-4">Share</h1>
 
