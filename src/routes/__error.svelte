@@ -1,41 +1,24 @@
-<script>
-  import Button from '$lib/components/Button/Button.svelte';
+<script lang="ts" context="module">
+  import type { Load } from '@sveltejs/kit';
+
+  export const load: Load = async ({ status, error }) => {
+    return {
+      props: {
+        status,
+        title: error.message
+      }
+    };
+  };
 </script>
 
-<svelte:head>
-  <title>Not Found</title>
-</svelte:head>
+<script lang="ts">
+  export let status: number;
+  export let title: string;
+</script>
 
-<div class="container">
-  <h1>What, not found? 😳</h1>
-  <p>You probably have an invalid link or the poll doesn't exist anymore.</p>
+<div class="grid place-content-center h-screen text-center">
+  <h1 class="font-extrabold text-6xl mb-2">{status ?? 500}</h1>
+  <p class="text-neutral-400 dark:text-neutral-500">{title ?? 'Something went wrong'}</p>
 
-  <div class="button">
-    <Button priority="secondary" link="/">Home</Button>
-  </div>
+  <a href="/" class="mt-4">Home</a>
 </div>
-
-<style>
-  .container {
-    position: relative;
-    top: 30vh;
-    display: block;
-    text-align: center;
-  }
-  h1 {
-    margin: 0;
-    font-size: 4rem;
-    font-weight: 900;
-    font-family: var(--font-family-heading);
-  }
-
-  p {
-    color: var(--text-subtle);
-  }
-
-  .button {
-    margin-top: 4rem;
-    display: flex;
-    justify-content: center;
-  }
-</style>

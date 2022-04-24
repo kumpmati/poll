@@ -1,66 +1,7 @@
-<main>
+<script lang="ts">
+  import '../globals.css';
+</script>
+
+<div class="max-w-xl px-3 mx-auto font-main text-neutral-600 dark:text-neutral-300">
   <slot />
-</main>
-
-<style global>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Urbanist:wght@500;900&display=swap');
-
-  :root {
-    --font-family-heading: 'Urbanist', sans-serif;
-    --font-family-body: 'Open Sans', sans-serif;
-  }
-
-  body {
-    font-family: 'Open Sans';
-    background: var(--background);
-    color: var(--text);
-    height: 100%;
-  }
-
-  main {
-    max-width: 40rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-    margin-bottom: 5rem;
-  }
-
-  @media screen and (max-width: 500px) {
-    main {
-      padding: 0 0.25rem;
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #000;
-      --modal-background: #222;
-      --text: #dddddd;
-      --text-subtle: #aaa;
-      --text-inverted: #222;
-      --text-inverted-subtle: #333;
-      --red: rgb(216, 54, 54);
-      --red-subtle: rgba(255, 110, 110, 0.85);
-      --green: rgb(73, 173, 47);
-      --green-subtle: rgba(111, 235, 80, 0.75);
-      --blue: rgb(31, 99, 138);
-      --blue-subtle: rgba(81, 160, 206, 0.75);
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      --background: #fff;
-      --modal-background: #ddd;
-      --text: #333;
-      --text-subtle: #555;
-      --text-inverted: #eee;
-      --text-inverted-subtle: #ddd;
-      --red: rgb(216, 54, 54);
-      --red-subtle: rgba(255, 110, 110, 0.85);
-      --green: rgb(111, 235, 80);
-      --green-subtle: rgba(111, 235, 80, 0.75);
-      --blue: rgb(52, 133, 180);
-      --blue-subtle: rgba(72, 157, 206, 0.75);
-    }
-  }
-</style>
+</div>

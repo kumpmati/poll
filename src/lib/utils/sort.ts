@@ -1,8 +1,8 @@
-import type { Option, Poll } from '$lib/types/poll';
+import type { Choice, Poll } from '$lib/types/poll';
 import type { Stats } from './stats';
 
-export const getChoiceModeSortedOptions = (poll: Poll, stats: Stats): Option[] => {
-  const sorted = poll.options.sort((a, b) => {
+export const getChoiceModeSortedOptions = (poll: Poll, stats: Stats): Choice[] => {
+  const sorted = poll.choices.sort((a, b) => {
     const aValue = stats?.[a.id] ?? 0;
     const bValue = stats?.[b.id] ?? 0;
 
@@ -12,6 +12,6 @@ export const getChoiceModeSortedOptions = (poll: Poll, stats: Stats): Option[] =
   return sorted;
 };
 
-export const getOrderModeSortedOptions = (poll: Poll, stats: Stats): Option[] => {
-  return poll.options.sort((a, b) => stats[b.id] - stats[a.id]);
+export const getOrderModeSortedOptions = (poll: Poll, stats: Stats): Choice[] => {
+  return poll.choices.sort((a, b) => stats[b.id] - stats[a.id]);
 };
