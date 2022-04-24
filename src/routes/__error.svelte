@@ -16,6 +16,10 @@
   export let title: string;
 </script>
 
+<svelte:head>
+  <title>{title ?? 'Something went wrong'}</title>
+</svelte:head>
+
 <div class="grid place-content-center h-screen text-center">
   <h1 class="font-extrabold text-6xl mb-2">{status ?? 500}</h1>
   <p class="text-neutral-400 dark:text-neutral-500">{title ?? 'Something went wrong'}</p>
