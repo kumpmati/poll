@@ -5,7 +5,8 @@
   import Check from '../Icons/check.svelte';
   import { fly } from 'svelte/transition';
   import { flip } from 'svelte/animate';
-  import Refresh from '../Icons/refresh.svelte';
+  import Spinner from '../Atoms/Spinner.svelte';
+  import Button from '../Atoms/Button.svelte';
 
   export let poll: Poll;
   export let loading: boolean;
@@ -105,14 +106,13 @@
     </ul>
   {/if}
 
-  <button
+  <Button
     on:click={onSubmit}
     type="button"
     disabled={!canSubmit || loading || selections.length < poll.settings.minChoices}
-    class="font-extrabold flex flex-row gap-2 justify-center py-3 px-8 w-max mt-6 mx-auto bg-neutral-200 dark:bg-neutral-700 rounded-md disabled:opacity-50"
   >
     {#if loading}
-      <span class="spinner"><Refresh /></span> Submitting
+      <Spinner /> Submitting
     {:else if !canSubmit}
       Already submitted
     {:else if selections.length < poll.settings.minChoices}
@@ -121,20 +121,5 @@
       <Check />
       Submit
     {/if}
-  </button>
+  </Button>
 </div>
-
-<style>
-  .spinner {
-    animation: spin 1s infinite both;
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-</style>

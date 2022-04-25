@@ -41,5 +41,5 @@
     <Markdown value={poll.description} />
   {/if}
 
-  <AnswerForm {poll} on:submit={onSubmit} {loading} {canSubmit} />
+  <AnswerForm {poll} {loading} {canSubmit} on:submit={onSubmit} />
 </div>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import Button from '$lib/components/Atoms/Button.svelte';
 
   const link = `https://poll.matsku.dev/${$page.params.id}`;
 </script>
@@ -27,10 +28,5 @@
     on:focus={(e) => e.currentTarget.select()}
   />
 
-  <a
-    href="/{$page.params.id}"
-    class="px-6 py-3 font-extrabold text-md mt-6 rounded-md bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 hover:dark:bg-neutral-600"
-  >
-    Go to poll
-  </a>
+  <Button href="/{$page.params.id}">Go to poll</Button>
 </div>

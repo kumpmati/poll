@@ -39,9 +39,10 @@
   {/if}
 
   <div class="flex justify-between items-center mt-4 mb-8">
-    <p class="font-extrabold text-neutral-300">
+    <p class="font-extrabold text-neutral-600 dark:text-neutral-300">
       {#if poll.settings.mode === 'choice'}
         Choose
+
         {#if poll.settings.maxChoices === 1}
           one
         {:else if poll.settings.maxChoices !== poll.settings.minChoices}
@@ -65,5 +66,12 @@
     <OrderStats {poll} {stats} />
   {:else}
     <ChoiceStats {poll} {stats} />
+  {/if}
+
+  {#if poll.settings.allowMultipleAnswers}
+    <a
+      class="font-extrabold flex flex-row gap-2 justify-center py-3 px-8 w-max mt-10 mx-auto bg-neutral-200 dark:bg-neutral-700 rounded-md"
+      href="/{poll.id}">Submit again</a
+    >
   {/if}
 </div>

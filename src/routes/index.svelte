@@ -14,13 +14,14 @@
   const onSubmit = async (e: CustomEvent<Poll>) => {
     loading = true;
     const response = await createPoll(e.detail);
-    loading = false;
 
     if (response.id) {
       await goto(`/${response.id}/share`);
     } else {
       console.error('something went wrong', response);
     }
+
+    loading = false;
   };
 </script>
 
@@ -28,6 +29,6 @@
   <title>Poll</title>
 </svelte:head>
 
-<div class="relative mt-[10rem] mb-20">
+<div class="mt-[10rem] sm:mt-[15rem] mb-[5rem]">
   <Form on:submit={onSubmit} {loading} />
 </div>

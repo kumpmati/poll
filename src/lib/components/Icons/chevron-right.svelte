@@ -12,9 +12,5 @@
   stroke-width="2"
   stroke-linecap="round"
   stroke-linejoin="round"
-  class="feather feather-more-vertical"
+  class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6" /></svg
 >
-  <circle cx="12" cy="12" r="1" />
-  <circle cx="12" cy="5" r="1" />
-  <circle cx="12" cy="19" r="1" />
-</svg>
