@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import Button from '$lib/components/Atoms/Button.svelte';
+  import QrCode from '$lib/components/QRCode/QRCode.svelte';
 
   const link = `https://poll.matsku.dev/${$page.params.id}`;
 </script>
@@ -12,13 +13,7 @@
 <div class="relative flex flex-col items-center top-[50vh] -translate-y-1/2">
   <h1 class="font-extrabold text-5xl sm:text-6xl mb-4">Share</h1>
 
-  <img
-    class="w-3/4 sm:w-1/2 max-w-xs rounded-md bg-white"
-    src="https://chart.googleapis.com/chart?cht=qr&chs=256x256&chld=L|1&chl={link}"
-    width={128}
-    height={128}
-    alt="QR code"
-  />
+  <QrCode value={link} size={128} className="w-3/4 sm:w-1/2 max-w-[12rem]" />
 
   <input
     type="text"
