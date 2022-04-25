@@ -23,7 +23,7 @@
   const stageTitles = [
     'Add a title', // unused
     'Add a description (optional)',
-    'Define choices',
+    'Add choices',
     'Configure settings'
   ];
 
