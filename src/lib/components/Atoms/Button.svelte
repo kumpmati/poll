@@ -4,7 +4,7 @@
   export let type: 'button' | 'submit' = 'button';
   export let className = '';
 
-  const tag = !!href ? 'a' : 'button';
+  const tag = href ? 'a' : 'button';
 </script>
 
 <svelte:element

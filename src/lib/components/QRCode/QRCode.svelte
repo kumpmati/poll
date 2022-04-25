@@ -3,12 +3,14 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import Spinner from '../Atoms/Spinner.svelte';
 
   export let value: string;
   export let size: number;
   export let className = '';
 
   let qrcode;
+  let loaded = false;
 
   onMount(() => {
     let script = document.createElement('script');
@@ -24,11 +26,19 @@
         colorLight: '#ffffff',
         correctLevel: window.QRCode.CorrectLevel.H
       });
+      loaded = true;
     };
   });
 </script>
 
-<div id="qrcode" class="rounded-md p-2 bg-white aspect-square {className ?? ''}" />
+<div
+  id="qrcode"
+  class="rounded-md p-2 bg-white aspect-square flex items-center justify-center {className ?? ''}"
+>
+  {#if !loaded}
+    <Spinner className="text-neutral-600" />
+  {/if}
+</div>
 
 <style>
   #qrcode :global(img) {

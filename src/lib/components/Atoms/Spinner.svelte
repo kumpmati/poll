@@ -1,8 +1,10 @@
 <script>
   import Refresh from '../Icons/refresh.svelte';
+
+  export let className = '';
 </script>
 
-<span class="spinner"><Refresh /></span>
+<span class="spinner flex w-max h-max rounded-[100%] {className ?? ''}"><Refresh /></span>
 
 <style>
   .spinner {

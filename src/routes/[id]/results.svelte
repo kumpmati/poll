@@ -6,6 +6,7 @@
   import { connectSocketIO } from '$lib/utils/websocket';
   import { onMount } from 'svelte';
   import Markdown from '$lib/components/Markdown/Markdown.svelte';
+  import Button from '$lib/components/Atoms/Button.svelte';
 
   export let poll: Poll;
   export let results: Results;
@@ -40,6 +41,8 @@
 
   <div class="flex justify-between items-center mt-4 mb-8">
     <p class="font-extrabold text-neutral-600 dark:text-neutral-300">
+      <span class="text-neutral-400 dark:text-neutral-500">Mode:</span>
+
       {#if poll.settings.mode === 'choice'}
         Choose
 
@@ -69,9 +72,6 @@
   {/if}
 
   {#if poll.settings.allowMultipleAnswers}
-    <a
-      class="font-extrabold flex flex-row gap-2 justify-center py-3 px-8 w-max mt-10 mx-auto bg-neutral-200 dark:bg-neutral-700 rounded-md"
-      href="/{poll.id}">Submit again</a
-    >
+    <Button href="/{poll.id}">Submit again</Button>
   {/if}
 </div>
