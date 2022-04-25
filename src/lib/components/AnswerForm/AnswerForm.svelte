@@ -7,12 +7,16 @@
   import { flip } from 'svelte/animate';
   import Spinner from '../Atoms/Spinner.svelte';
   import Button from '../Atoms/Button.svelte';
+  import { shuffle } from '$lib/utils/sort';
 
   export let poll: Poll;
   export let loading: boolean;
   export let canSubmit: boolean;
 
-  let selections = poll?.settings?.mode === 'order' ? [...poll.choices] : [];
+  // shuffle choices
+  let choices = poll.settings.shuffleAnswers ? shuffle(poll.choices) : poll.choices;
+
+  let selections = poll?.settings?.mode === 'order' ? choices : [];
   $: selectionsFull = selections.length >= poll.settings.maxChoices;
 
   const dispatch = createEventDispatcher();
@@ -78,7 +82,7 @@
     </p>
 
     <ul class="flex flex-col gap-2">
-      {#each poll.choices as choice (choice.id)}
+      {#each choices as choice (choice.id)}
         {@const selected = !!selections.find((s) => s.id === choice.id)}
         <li>
           <button

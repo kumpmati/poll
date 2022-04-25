@@ -37,7 +37,8 @@
       mode: 'choice',
       minChoices: 1,
       maxChoices: 1,
-      allowMultipleAnswers: false
+      allowMultipleAnswers: false,
+      shuffleAnswers: true
     }
   };
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Choice, Poll } from '$lib/types/poll';
   import { fly } from 'svelte/transition';
+  import SettingRow from './SettingRow.svelte';
 
   export let settings: Poll['settings'];
   export let choices: Choice[];
@@ -15,114 +16,60 @@
   }
 </script>
 
-<div class="flex flex-col gap-5 mt-4 sm:gap-2 min-h-[12rem]">
+<div class="flex flex-col gap-5 mt-4 sm:gap-2 min-h-[14rem]">
   <span class="font-extrabold text-neutral-300 dark:text-neutral-500"> Settings </span>
 
-  <div class="flex flex-row gap-2 justify-between items-start">
-    <p class="font-extrabold text-lg">Allow multiple submissions</p>
+  <!-- Allow multiple submissions -->
+  <SettingRow
+    bind:current={settings.allowMultipleAnswers}
+    options={[
+      { label: 'Yes', value: true, title: 'A single user can submit multiple times' },
+      { label: 'No', value: false, title: 'A single user can only submit once' }
+    ]}
+  >
+    Allow multiple submissions
+  </SettingRow>
 
-    <div class="flex gap-2">
-      <label
-        title="A single user can submit multiple times"
-        class="pt-1 pb-1 w-20 cursor-pointer text-center rounded-md {settings.allowMultipleAnswers
-          ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
-          : null}"
-      >
-        Yes
-        <input
-          class="hidden"
-          type="radio"
-          name="mode"
-          value={true}
-          bind:group={settings.allowMultipleAnswers}
-        />
-      </label>
-      <label
-        title="A single user can only submit once"
-        class="pt-1 pb-1 w-20 cursor-pointer text-center rounded-md {!settings.allowMultipleAnswers
-          ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
-          : null}"
-      >
-        No
-        <input
-          class="hidden"
-          type="radio"
-          name="mode"
-          value={false}
-          bind:group={settings.allowMultipleAnswers}
-        />
-      </label>
-    </div>
-  </div>
+  <!-- Shuffle answers -->
+  <SettingRow
+    bind:current={settings.shuffleAnswers}
+    options={[
+      { label: 'Yes', value: true },
+      { label: 'No', value: false }
+    ]}
+  >
+    Shuffle answers
+  </SettingRow>
 
-  <div class="flex flex-row gap-2 justify-between items-start">
-    <p class="font-extrabold text-lg">Submission mode</p>
+  <!-- Submission mode -->
+  <SettingRow
+    bind:current={settings.mode}
+    options={[
+      {
+        value: 'order',
+        label: 'Order',
+        title: 'Users need to put the choices in a descending order of preference'
+      },
+      {
+        value: 'choice',
+        label: 'Choice',
+        title: 'Users are required to choose one or more answers'
+      }
+    ]}>Submission mode</SettingRow
+  >
 
-    <div class="flex gap-2">
-      <label
-        title="Users need to put the choices in a descending order of preference"
-        class="pt-1 pb-1 w-20 text-center cursor-pointer rounded-md {settings.mode === 'order'
-          ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
-          : null}"
-      >
-        Order
-        <input class="hidden" type="radio" name="mode" value="order" bind:group={settings.mode} />
-      </label>
-
-      <label
-        title="Users are required to choose one or more answers"
-        class="pt-1 pb-1 w-20 text-center cursor-pointer rounded-md {settings.mode === 'choice'
-          ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
-          : null}"
-      >
-        Choice
-        <input class="hidden" type="radio" name="mode" value="choice" bind:group={settings.mode} />
-      </label>
-    </div>
-  </div>
-
-  <!-- Number of choices -->
   {#if settings.mode === 'choice'}
-    <div
-      transition:fly|local={{ y: -10, duration: 200 }}
-      class="flex flex-row gap-2 justify-between items-start"
-    >
-      <p class="font-extrabold text-lg">Number of required choices</p>
-
-      <div class="flex gap-2">
-        <label
-          title="Choose how many answers users need to select"
-          class="pt-1 pb-1 w-20 text-center cursor-pointer rounded-md {multipleChoice
-            ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
-            : null}"
-        >
-          Range
-          <input
-            class="hidden"
-            type="radio"
-            name="multiple-choice"
-            value={true}
-            bind:group={multipleChoice}
-          />
-        </label>
-
-        <label
-          title="Users need to select exactly one (1) answer"
-          class="pt-1 pb-1 w-20 text-center cursor-pointer rounded-md {!multipleChoice
-            ? 'bg-neutral-200 dark:bg-neutral-700 font-extrabold'
-            : null}"
-        >
-          Default
-          <input
-            class="hidden"
-            type="radio"
-            name="multiple-choice"
-            value={false}
-            bind:group={multipleChoice}
-          />
-        </label>
-      </div>
-    </div>
+    <span transition:fly|local={{ y: -10, duration: 200 }} class="">
+      <SettingRow
+        bind:current={multipleChoice}
+        options={[
+          { value: true, label: 'Range', title: 'Choose how many answers users need to select' },
+          { value: false, label: 'Default', title: 'Users need to select exactly one (1) answer' }
+        ]}
+      >
+        Number of required choices
+      </SettingRow>
+    </span>
   {/if}
 
   <!-- Choice number settings -->
