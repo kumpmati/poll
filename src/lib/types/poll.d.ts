@@ -9,7 +9,7 @@ export type Poll = {
     minChoices: number;
     maxChoices: number;
     allowMultipleAnswers: boolean;
-    shuffleAnswers: boolean;
+    shuffleChoices: boolean;
   };
 };
 

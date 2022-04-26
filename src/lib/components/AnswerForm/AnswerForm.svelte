@@ -14,7 +14,7 @@
   export let canSubmit: boolean;
 
   // shuffle choices
-  let choices = poll.settings.shuffleAnswers ? shuffle(poll.choices) : poll.choices;
+  let choices = poll.settings.shuffleChoices ? shuffle(poll.choices) : poll.choices;
 
   let selections = poll?.settings?.mode === 'order' ? choices : [];
   $: selectionsFull = selections.length >= poll.settings.maxChoices;

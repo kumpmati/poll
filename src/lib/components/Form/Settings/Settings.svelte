@@ -30,15 +30,15 @@
     Allow multiple submissions
   </SettingRow>
 
-  <!-- Shuffle answers -->
+  <!-- Shuffle choices -->
   <SettingRow
-    bind:current={settings.shuffleAnswers}
+    bind:current={settings.shuffleChoices}
     options={[
       { label: 'Yes', value: true },
       { label: 'No', value: false }
     ]}
   >
-    Shuffle answers
+    Shuffle choices
   </SettingRow>
 
   <!-- Submission mode -->
