@@ -12,7 +12,7 @@
   const submissionHistory = createSubmissionHistory();
 
   let loading = false;
-  let canSubmit = poll.settings.allowMultipleAnswers ? true : !$submissionHistory[poll.id];
+  let hasSubmitted = poll.settings.allowMultipleAnswers ? false : !!$submissionHistory[poll.id];
 
   const onSubmit = async (e: CustomEvent<Choice[]>) => {
     loading = true;
@@ -41,5 +41,5 @@
     <Markdown value={poll.description} />
   {/if}
 
-  <AnswerForm {poll} {loading} {canSubmit} on:submit={onSubmit} />
+  <AnswerForm {poll} {loading} {hasSubmitted} on:submit={onSubmit} />
 </div>

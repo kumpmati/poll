@@ -8,10 +8,11 @@
   import Spinner from '../Atoms/Spinner.svelte';
   import Button from '../Atoms/Button.svelte';
   import { shuffle } from '$lib/utils/sort';
+  import { getCanSubmit, getChooseText, getSubmitButtonText } from '$lib/utils/requiredChoices';
 
   export let poll: Poll;
   export let loading: boolean;
-  export let canSubmit: boolean;
+  export let hasSubmitted: boolean;
 
   // shuffle choices
   let choices = poll.settings.shuffleChoices ? shuffle(poll.choices) : poll.choices;
@@ -71,14 +72,7 @@
   {:else}
     <!-- Choice mode -->
     <p class="font-extrabold text-xl">
-      Choose
-      {#if poll.settings.maxChoices === 1}
-        one
-      {:else if poll.settings.maxChoices !== poll.settings.minChoices}
-        {poll.settings.minChoices}-{poll.settings.maxChoices}
-      {:else}
-        {poll.settings.maxChoices}
-      {/if}
+      {getChooseText(poll)}
     </p>
 
     <ul class="flex flex-col gap-2">
@@ -91,7 +85,7 @@
             class="
               relative flex flex-row gap-3 py-3 px-4
               text-left text-lg rounded-md w-full items-center
-              overflow-hidden disabled:opacity-50 transition-all
+              overflow-hidden disabled:opacity-50
               hover:bg-neutral-100 hover:dark:bg-neutral-900
               disabled:hover:bg-transparent
               {selected
@@ -113,17 +107,18 @@
   <Button
     on:click={onSubmit}
     type="button"
-    disabled={!canSubmit || loading || selections.length < poll.settings.minChoices}
+    className="mx-auto mt-8"
+    disabled={hasSubmitted || loading || !getCanSubmit(poll, selections)}
   >
     {#if loading}
       <Spinner /> Submitting
-    {:else if !canSubmit}
+    {:else if hasSubmitted}
       Already submitted
-    {:else if selections.length < poll.settings.minChoices}
-      {`Choose ${poll.settings.minChoices - selections.length} more`}
-    {:else}
+    {:else if getCanSubmit(poll, selections)}
       <Check />
       Submit
+    {:else}
+      {getSubmitButtonText(poll, selections)}
     {/if}
   </Button>
 </div>

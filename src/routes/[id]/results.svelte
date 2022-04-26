@@ -7,6 +7,7 @@
   import { onMount } from 'svelte';
   import Markdown from '$lib/components/Markdown/Markdown.svelte';
   import Button from '$lib/components/Atoms/Button.svelte';
+  import { getChooseText } from '$lib/utils/requiredChoices';
 
   export let poll: Poll;
   export let results: Results;
@@ -44,15 +45,7 @@
       <span class="text-neutral-400 dark:text-neutral-500">Mode:</span>
 
       {#if poll.settings.mode === 'choice'}
-        Choose
-
-        {#if poll.settings.maxChoices === 1}
-          one
-        {:else if poll.settings.maxChoices !== poll.settings.minChoices}
-          {poll.settings.minChoices}-{poll.settings.maxChoices}
-        {:else}
-          {poll.settings.maxChoices}
-        {/if}
+        {getChooseText(poll)}
       {:else}
         Order
       {/if}
@@ -72,6 +65,6 @@
   {/if}
 
   {#if poll.settings.allowMultipleAnswers}
-    <Button href="/{poll.id}">Submit again</Button>
+    <Button href="/{poll.id}" className="mx-auto mt-8">Submit again</Button>
   {/if}
 </div>
