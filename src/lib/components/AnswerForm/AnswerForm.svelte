@@ -40,6 +40,12 @@
       return;
     }
 
+    // replace previous selection when max 1 choices can be made
+    if (poll.settings.maxChoices === 1) {
+      selections = [item];
+      return;
+    }
+
     // cannot select any more, max amount reached
     if (selectionsFull) return;
 
@@ -80,7 +86,10 @@
         {@const selected = !!selections.find((s) => s.id === choice.id)}
         <li>
           <button
-            disabled={selectionsFull && !selected}
+            disabled={poll.settings.mode === 'choice' &&
+              poll.settings.maxChoices > 1 &&
+              selectionsFull &&
+              !selected}
             on:click={() => onClickItem(choice)}
             class="
               relative flex flex-row gap-3 py-3 px-4
