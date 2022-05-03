@@ -10,11 +10,18 @@
 
   const dispatch = createEventDispatcher();
 
+  let element: HTMLInputElement;
+
   const handleDeleteClick = () => {
     if (canDelete) dispatch('delete', choice.id);
   };
 
-  let element;
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key !== 'Enter') return;
+
+    e.preventDefault();
+    dispatch('addChoice');
+  };
 
   // focus to the text field when mounted
   onMount(() => element?.focus());
@@ -26,7 +33,7 @@
   class="w-full p-3 bg-transparent outline-none"
   required
   placeholder="Choice {index + 1}"
-  on:keydown={(e) => (e.key === 'Enter' ? e.preventDefault() : null)}
+  on:keydown={handleKeyDown}
   bind:value={choice.text}
   bind:this={element}
 />

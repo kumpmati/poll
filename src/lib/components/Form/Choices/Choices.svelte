@@ -17,8 +17,11 @@
     choices = e.detail.items;
   };
 
-  const onAddChoice = () => {
-    choices = [...choices, { id: nanoid(), text: '' }];
+  const onAddChoice = (index: number) => {
+    const newChoice: Choice = { id: nanoid(), text: '' };
+
+    choices.splice(index, 0, newChoice);
+    choices = choices; // tell svelte to update
   };
 
   const onDeleteChoice = (e: CustomEvent<string>) => {
@@ -42,7 +45,13 @@
         animate:flip={{ duration: 200 }}
         class="relative flex p-0 pl-0 rounded-md w-full items-center overflow-hidden bg-neutral-200 dark:bg-neutral-700"
       >
-        <ChoiceItem bind:choice {index} canDelete={choices.length > 1} on:delete={onDeleteChoice} />
+        <ChoiceItem
+          bind:choice
+          {index}
+          canDelete={choices.length > 1}
+          on:delete={onDeleteChoice}
+          on:addChoice={() => onAddChoice(index + 1)}
+        />
       </li>
     {/each}
   </ul>
@@ -50,7 +59,7 @@
   <button
     type="button"
     class="w-full bg-neutral-200 dark:bg-neutral-700 grid place-content-center p-3 rounded-md hover:bg-neutral-300 hover:dark:bg-neutral-600"
-    on:click={onAddChoice}
+    on:click={() => onAddChoice(choices.length)}
   >
     <Plus />
   </button>

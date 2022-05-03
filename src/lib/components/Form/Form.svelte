@@ -93,7 +93,7 @@
   {/if}
 
   {#if stage >= 3}
-    <Button type="submit" on:click={onSubmit} disabled={loading}>
+    <Button type="submit" className="mx-auto" on:click={onSubmit} disabled={loading}>
       {#if loading}
         <Spinner /> Creating
       {:else}
