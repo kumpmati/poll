@@ -40,7 +40,7 @@
     <Markdown value={poll.description} />
   {/if}
 
-  <div class="flex justify-between items-center mt-4 mb-8">
+  <div class="flex justify-between items-center mt-[5rem] mb-8">
     <p class="font-extrabold text-neutral-600 dark:text-neutral-300">
       <span class="text-neutral-400 dark:text-neutral-500">Mode:</span>
 

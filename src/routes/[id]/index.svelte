@@ -41,5 +41,7 @@
     <Markdown value={poll.description} />
   {/if}
 
-  <AnswerForm {poll} {loading} {hasSubmitted} on:submit={onSubmit} />
+  <div class="mt-[5rem]">
+    <AnswerForm {poll} {loading} {hasSubmitted} on:submit={onSubmit} />
+  </div>
 </div>
