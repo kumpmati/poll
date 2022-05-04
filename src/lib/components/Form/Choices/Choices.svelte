@@ -30,9 +30,13 @@
 </script>
 
 <div class="flex flex-col gap-2">
-  {#if inFocus}
-    <span class="font-extrabold text-neutral-500 dark:text-neutral-300"> Choices </span>
-  {/if}
+  <span
+    class="font-extrabold {inFocus
+      ? 'text-neutral-500 dark:text-neutral-300'
+      : 'text-neutral-300 dark:text-neutral-500'}"
+  >
+    {inFocus ? 'Add choices' : 'Choices'}
+  </span>
 
   <ul
     class="flex flex-col gap-2 rounded-md"
@@ -43,7 +47,7 @@
     {#each choices as choice, index (choice.id)}
       <li
         animate:flip={{ duration: 200 }}
-        class="relative flex p-0 pl-0 rounded-md w-full items-center overflow-hidden bg-neutral-200 dark:bg-neutral-700"
+        class="relative flex p-0 pl-1 rounded-md w-full items-center bg-neutral-200 dark:bg-neutral-700"
       >
         <ChoiceItem
           bind:choice

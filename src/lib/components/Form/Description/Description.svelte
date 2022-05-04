@@ -20,11 +20,13 @@
 </script>
 
 <div class="flex flex-col">
-  {#if inFocus}
-    <span class="font-extrabold text-neutral-500 dark:text-neutral-300">
-      Description (optional)
-    </span>
-  {/if}
+  <span
+    class="font-extrabold {inFocus
+      ? 'text-neutral-500 dark:text-neutral-300'
+      : 'text-neutral-300 dark:text-neutral-500'}"
+  >
+    {inFocus ? 'Add a description (optional)' : 'Description'}
+  </span>
 
   <label>
     <textarea

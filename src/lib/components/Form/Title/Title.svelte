@@ -15,9 +15,13 @@
 </script>
 
 <label class="flex flex-col">
-  {#if inFocus}
-    <span class="font-extrabold text-neutral-500 dark:text-neutral-300"> Add a title </span>
-  {/if}
+  <span
+    class="font-extrabold {inFocus
+      ? 'text-neutral-500 dark:text-neutral-300'
+      : 'text-neutral-300 dark:text-neutral-500'}"
+  >
+    {inFocus ? 'Add a title' : 'Title'}
+  </span>
 
   <!-- svelte-ignore a11y-autofocus -->
   <input
@@ -26,7 +30,7 @@
     required
     autocomplete="off"
     type="text"
-    class="text-4xl p-2 pl-1 pr-1 font-extrabold font-main bg-transparent placeholder-neutral-100 dark:placeholder-neutral-600 outline-none"
+    class="appearance-none text-4xl p-2 pl-1 pr-1 font-extrabold font-main bg-transparent placeholder-neutral-100 dark:placeholder-neutral-600"
     placeholder="Your title here"
     on:keydown={handleKeyDown}
   />
