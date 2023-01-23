@@ -16,7 +16,7 @@
 	});
 
 	const handleSubmit = async () => {
-		const result = await createPoll({
+		const result = await createPoll($user?.id ?? 'public', {
 			id: nanoid(6),
 			publishedAt: Date.now(),
 			title: $form.title,
