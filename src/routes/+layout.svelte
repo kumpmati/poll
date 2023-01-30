@@ -1,7 +1,5 @@
 <script lang="ts">
-	import Nav from '$lib/components/Nav.svelte';
+	import 'carbon-components-svelte/css/g100.css';
 </script>
-
-<Nav />
 
 <slot />

@@ -1,4 +1,7 @@
+<script lang="ts">
+	import { Link } from 'carbon-components-svelte';
+</script>
+
 <h1>Poll</h1>
 
-<a href="/auth">Auth</a>
-<a href="/new">New</a>
+<Link href="/new">New</Link>
