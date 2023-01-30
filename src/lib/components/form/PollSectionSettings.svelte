@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PollSection } from '$lib/schemas/poll';
+	import type { PollChoice, PollSection } from '$lib/schemas/poll';
 	import { copy, limit } from '$lib/util';
 	import {
 		FormGroup,
@@ -15,6 +15,7 @@
 		DatePickerInput
 	} from 'carbon-components-svelte';
 	import { TrashCan, Edit, Add, Draggable } from 'carbon-icons-svelte';
+	import { nanoid } from 'nanoid';
 	import { createEventDispatcher } from 'svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
@@ -32,6 +33,11 @@
 	let backup = copy($section);
 
 	$: dispatch('modal', open ? 'open' : 'close');
+	$: title = `${$section.title || 'Untitled section'} ${$section.required ? '*' : ''}`;
+
+	/*
+	 * Functions
+	 */
 
 	const handleOpen = (e: any) => {
 		e.stopPropagation();
@@ -49,7 +55,24 @@
 		backup = copy($section);
 	};
 
-	$: title = `${$section.title || 'Untitled section'} ${$section.required ? '*' : ''}`;
+	const handleAddChoice = () => {
+		$section.choices.push({ id: nanoid(), value: '' });
+		$section.choices = $section.choices;
+	};
+
+	const handleRemoveChoice = (choice: PollChoice) => {
+		$section.choices.splice($section.choices.indexOf(choice), 1);
+		$section.choices = $section.choices;
+	};
+
+	const handleChangeDate = (e: any) => {
+		const [from, to] = e.detail.selectedDates;
+
+		$section.choices = [
+			{ id: 'from', value: from ?? null },
+			{ id: 'to', value: to ?? null }
+		];
+	};
 </script>
 
 <AccordionItem {title}>
@@ -109,23 +132,23 @@
 
 		<FormGroup legendText="Choices">
 			{#if $section.mode === 'date'}
-				<DatePicker dateFormat="d/m/y" datePickerType="range" on:change={(e) => {}}>
+				<DatePicker dateFormat="d/m/y" datePickerType="range" on:change={handleChangeDate}>
 					<DatePickerInput labelText="From" placeholder="dd/mm/yyyy" />
 					<DatePickerInput labelText="To" placeholder="dd/mm/yyyy" />
 				</DatePicker>
 			{:else}
 				<div
-					use:dndzone={{ items: $section.choices, type: 'options' }}
+					use:dndzone={{ items: $section.choices, type: 'choices' }}
 					on:consider={(e) => ($section.choices = e.detail.items)}
 					on:finalize={(e) => ($section.choices = e.detail.items)}
 				>
 					{#each $section.choices as choice (choice.id)}
-						<div class="option" animate:flip={{ duration: 200 }}>
+						<div class="choice" animate:flip={{ duration: 200 }}>
 							<Button
 								kind="secondary"
 								icon={Draggable}
 								size="field"
-								iconDescription="Drag option"
+								iconDescription="Drag choice"
 							/>
 							<TextInput bind:value={choice.value} />
 							<Button
@@ -133,13 +156,13 @@
 								icon={TrashCan}
 								size="field"
 								iconDescription="Remove"
-								on:click={() => null}
+								on:click={() => handleRemoveChoice(choice)}
 							/>
 						</div>
 					{/each}
 				</div>
 
-				<Button kind="ghost" size="field" icon={Add} on:click={() => null}>Add choice</Button>
+				<Button kind="ghost" size="field" icon={Add} on:click={handleAddChoice}>Add choice</Button>
 			{/if}
 		</FormGroup>
 	</div>
@@ -151,7 +174,7 @@
 		justify-content: space-between;
 	}
 
-	.option {
+	.choice {
 		display: flex;
 	}
 </style>
