@@ -36,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"mongoose": "^6.9.0",
 		"nanoid": "^4.0.0",
 		"zod": "^3.20.2"
 	}

@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import MainPollSettings from '$lib/components/form/MainPollSettings.svelte';
 	import PollSectionSettings from '$lib/components/form/PollSectionSettings.svelte';
+	import type { Poll } from '$lib/schemas/poll';
 	import {
 		createMainPollStore,
 		createPollSectionStore,
@@ -60,15 +62,22 @@
 		sections = sections;
 	};
 
-	const handleSubmitPoll = (e: Event) => {
+	const handleSubmitPoll = async (e: Event) => {
 		e.preventDefault();
 
-		const poll = {
+		const poll: Poll = {
 			...$store,
 			sections: sections.map((s) => get(s.store))
 		};
 
-		console.log(poll);
+		const response = await fetch('/new', {
+			method: 'POST',
+			body: JSON.stringify(poll)
+		});
+
+		if (response.ok) {
+			await goto(`/poll/${poll.id}`);
+		}
 	};
 </script>
 
