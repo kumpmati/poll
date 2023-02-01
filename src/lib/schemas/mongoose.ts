@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import type { Poll } from './poll';
+import type { Poll, PollResponse } from './poll';
 
 export const pollDatabaseSchema = new Schema<Poll>(
 	{
@@ -22,3 +22,27 @@ export const pollDatabaseSchema = new Schema<Poll>(
 );
 
 export const PollModel = mongoose.models.poll ?? mongoose.model('poll', pollDatabaseSchema);
+
+export const pollResponseDatabaseSchema = new Schema<PollResponse>(
+	{
+		id: String,
+		sectionId: String,
+		timestamp: Number,
+		data: [String]
+	},
+	{
+		toJSON: {
+			transform: (_, v) => {
+				delete v._id;
+			}
+		},
+		toObject: {
+			transform: (_, v) => {
+				delete v._id;
+			}
+		}
+	}
+);
+
+export const PollResponseModel =
+	mongoose.models.pollResponse ?? mongoose.model('pollResponse', pollResponseDatabaseSchema);

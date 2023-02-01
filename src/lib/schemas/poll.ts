@@ -2,7 +2,7 @@ import z from 'zod';
 
 export const pollChoiceSchema = z.object({
 	id: z.string(),
-	type: z.string(),
+	type: z.enum(['string', 'date', 'daterange', 'image', 'freetext']),
 	data: z.any()
 });
 

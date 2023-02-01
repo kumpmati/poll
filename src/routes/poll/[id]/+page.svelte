@@ -1,13 +1,20 @@
 <script lang="ts">
+	import PollForm from '$lib/components/pollForm/PollForm.svelte';
+	import type { PollSection } from '$lib/schemas/poll';
+	import { pollFormStore } from '$lib/stores/form/pollForm';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	console.log(data);
+	const store = pollFormStore(data);
 </script>
 
+<svelte:head>
+	<title>{data.meta.title}</title>
+</svelte:head>
+
 <main>
-	{data.meta.title}
+	<PollForm poll={data} {store} />
 </main>
 
 <style>

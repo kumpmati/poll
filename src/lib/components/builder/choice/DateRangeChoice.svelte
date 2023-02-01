@@ -5,14 +5,14 @@
 	export let builder: ChoiceBuilderStore;
 
 	$: if (typeof $builder.data !== 'object') {
-		$builder.data = { from: '', to: '' };
+		$builder.data = { limit: false, range: { from: '', to: '' } };
 	}
 </script>
 
 <DatePicker
 	datePickerType="range"
-	bind:valueFrom={$builder.data.from}
-	bind:valueTo={$builder.data.to}
+	bind:valueFrom={$builder.data.range.from}
+	bind:valueTo={$builder.data.range.to}
 	dateFormat="Y/m/d"
 >
 	<DatePickerInput placeholder="From" />

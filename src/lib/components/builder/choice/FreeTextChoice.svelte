@@ -4,11 +4,11 @@
 
 	export let builder: ChoiceBuilderStore;
 
-	$: if (typeof $builder.data !== 'object') {
-		$builder.data = { label: 'Other' };
+	$: if (typeof $builder.data !== 'string') {
+		$builder.data = '';
 	}
 
-	$: invalid = $builder.data.label.length === 0;
+	$: invalid = $builder.data.length === 0;
 </script>
 
-<TextInput bind:value={$builder.data.label} {invalid} placeholder="Label" />
+<TextInput bind:value={$builder.data} {invalid} placeholder="Label" />
