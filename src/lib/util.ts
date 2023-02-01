@@ -6,7 +6,8 @@ export const limit = (val: string, length: number) =>
 const sectionTypeLabels = {
 	multiplechoice: 'Multiple choice',
 	singlechoice: 'Single choice',
-	date: 'Date'
+	dates: 'Find a common date',
+	order: 'Put in order'
 };
 
 export const sectionTypeLabel = (v: keyof typeof sectionTypeLabels): string => {

@@ -4,13 +4,7 @@ import type { Poll } from './poll';
 export const pollDatabaseSchema = new Schema<Poll>(
 	{
 		id: String,
-		title: String,
-		author: String,
-		description: String,
-		publishedAt: Number,
-		mode: String,
-		requireAuth: Boolean,
-		allowMultipleSubmissions: Boolean,
+		meta: Schema.Types.Mixed,
 		sections: [Schema.Types.Mixed]
 	},
 	{

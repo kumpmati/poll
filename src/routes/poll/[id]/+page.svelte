@@ -1,12 +1,13 @@
 <script lang="ts">
-	import Poll from '$lib/components/poll/Poll.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	console.log(data);
 </script>
 
 <main>
-	<Poll poll={data} />
+	{data.meta.title}
 </main>
 
 <style>

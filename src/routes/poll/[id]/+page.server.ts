@@ -10,5 +10,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, 'not found');
 	}
 
+	console.log(poll);
+
 	return poll;
 };

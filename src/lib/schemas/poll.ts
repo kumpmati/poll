@@ -2,27 +2,27 @@ import z from 'zod';
 
 export const pollChoiceSchema = z.object({
 	id: z.string(),
-	value: z.any()
+	type: z.string(),
+	data: z.any()
 });
 
 export const pollSectionSchema = z.object({
 	id: z.string(),
 	title: z.string().min(1),
-	required: z.boolean(),
 	description: z.string().min(0),
-	mode: z.enum(['singlechoice', 'multiplechoice', 'order', 'date']),
+	type: z.enum(['singlechoice', 'multiplechoice', 'order', 'dates']),
 	choices: z.array(pollChoiceSchema).min(1)
 });
 
 export const pollSchema = z.object({
 	id: z.string(),
-	title: z.string().min(1),
-	author: z.string(),
-	description: z.string().min(0),
-	publishedAt: z.number().min(0),
-	mode: z.enum(['normal', 'random', 'singlerandom']),
-	requireAuth: z.boolean(),
-	allowMultipleSubmissions: z.boolean(),
+	type: z.enum(['all_sections_normal', 'all_sections_random', 'one_section_random']),
+	meta: z.object({
+		title: z.string().min(1),
+		description: z.string().min(0),
+		createdAt: z.string().datetime(),
+		author: z.string().nullable()
+	}),
 	sections: z.array(pollSectionSchema).min(1)
 });
 

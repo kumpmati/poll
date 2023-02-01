@@ -1,6 +1,6 @@
 <script lang="ts">
+	import type { Poll } from '$lib/schemas/poll';
 	import type { PollBuilderStore } from '$lib/stores/builder/poll';
-	import type { PollOutput } from '$lib/types/poll';
 	import {
 		Accordion,
 		Button,
@@ -11,11 +11,11 @@
 	} from 'carbon-components-svelte';
 	import { Add, CheckmarkFilled } from 'carbon-icons-svelte';
 	import { createEventDispatcher } from 'svelte';
-	import EditSection from './section/EditSection.svelte';
+	import SectionBuilder from './section/SectionBuilder.svelte';
 
-	const dispatch = createEventDispatcher<{ submit: PollOutput<any, any, any> }>();
+	const dispatch = createEventDispatcher<{ submit: Poll }>();
 
-	export let builder: PollBuilderStore<string, string, any>;
+	export let builder: PollBuilderStore;
 
 	const handleSubmit = (e: Event) => {
 		e.preventDefault();
@@ -33,7 +33,7 @@
 	<FormGroup legendText="Sections">
 		<Accordion align="start">
 			{#each $builder.sections as section, index (section.id)}
-				<EditSection
+				<SectionBuilder
 					{index}
 					builder={section.builder}
 					on:delete={(e) => builder.removeSection(e.detail)}

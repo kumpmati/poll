@@ -1,51 +1,49 @@
-import type { ChoiceData, PollOutput } from '$lib/types/poll';
+import type { Poll, PollSection } from '$lib/schemas/poll';
 import { nanoid } from 'nanoid';
 import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import { sectionBuilder, type SectionBuilderStore } from './section';
 
-export type Input<ST extends string, CT extends string, CD extends ChoiceData> = Omit<
-	PollOutput<ST, CT, CD>,
-	'sections'
->;
+export type Input = Omit<Poll, 'sections'>;
 
-export type ReadableState<ST extends string, CT extends string, CD extends ChoiceData> = Input<
-	ST,
-	CT,
-	CD
-> & {
-	sections: { id: string; builder: SectionBuilderStore<ST, CT, CD> }[];
+export type ReadableState = Input & {
+	sections: { id: string; builder: SectionBuilderStore }[];
 };
 
-export type PollBuilderStore<ST extends string, CT extends string, CD extends ChoiceData> = {
-	addSection: (type: ST) => SectionBuilderStore<ST, CT, CD>;
+export type PollBuilderStore = {
+	addSection: (type: PollSection['type']) => SectionBuilderStore;
 	removeSection: (id: string) => void;
-	build: () => PollOutput<ST, CT, CD>;
-} & Writable<Input<ST, CT, CD>> &
-	Readable<ReadableState<ST, CT, CD>>;
+	build: () => Poll;
+} & Writable<Input> &
+	Readable<ReadableState>;
 
 /**
  * Poll builder store.
  */
-export const pollBuilder = <ST extends string, CT extends string, CD extends ChoiceData>(
-	initial?: Input<ST, CT, CD>
-): PollBuilderStore<ST, CT, CD> => {
-	const state = writable<Input<ST, CT, CD>>(initial);
-	const sectionsBuilders = writable<SectionBuilderStore<ST, CT, CD>[]>([]);
-	const readableState = derived([state, sectionsBuilders], ([$state, $sectionBuilders]) => ({
-		...$state,
-		sections: $sectionBuilders.map((s) => ({
-			id: get(s).id,
-			builder: s
-		}))
-	}));
+export const pollBuilder = (initial?: Input): PollBuilderStore => {
+	const state = writable<Input>(initial);
+	const sectionsBuilders = writable<SectionBuilderStore[]>([]);
+	const readableState = derived([state, sectionsBuilders], ([$state, $sectionBuilders]) => {
+		return {
+			...$state,
+			sections: $sectionBuilders.map((s) => ({
+				id: get(s).id,
+				builder: s
+			}))
+		};
+	});
 
 	/**
 	 * Adds a section to the builder.
 	 * @param type Type of the section
 	 * @param store
 	 */
-	const addSection = (type: ST): SectionBuilderStore<ST, CT, CD> => {
-		const builder = sectionBuilder<ST, CT, CD>({ id: nanoid(), type });
+	const addSection = (type: PollSection['type']): SectionBuilderStore => {
+		const builder = sectionBuilder({
+			id: nanoid(),
+			type,
+			title: 'Untitled section',
+			description: ''
+		});
 
 		sectionsBuilders.update((prev) => {
 			prev.push(builder);
@@ -69,6 +67,15 @@ export const pollBuilder = <ST extends string, CT extends string, CD extends Cho
 		});
 	};
 
+	const build = () => {
+		const val = get(readableState);
+
+		return {
+			...val,
+			sections: val.sections.map((s) => s.builder.build())
+		};
+	};
+
 	return {
 		subscribe: readableState.subscribe,
 		set: state.set,
@@ -77,13 +84,6 @@ export const pollBuilder = <ST extends string, CT extends string, CD extends Cho
 		addSection,
 		removeSection,
 
-		build: () => {
-			const val = get(readableState);
-
-			return {
-				...val,
-				sections: val.sections.map((s) => s.builder.build())
-			};
-		}
+		build
 	};
 };

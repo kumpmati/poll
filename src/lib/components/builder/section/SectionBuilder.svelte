@@ -1,8 +1,15 @@
 <script lang="ts">
 	import type { SectionBuilderStore } from '$lib/stores/builder/section';
 	import { sectionTypeLabel } from '$lib/util';
-	import { AccordionItem, Button, Dropdown, FormGroup, Modal } from 'carbon-components-svelte';
-	import { Add, Edit, Pen, TrashCan } from 'carbon-icons-svelte';
+	import {
+		AccordionItem,
+		Button,
+		Dropdown,
+		Modal,
+		TextArea,
+		TextInput
+	} from 'carbon-components-svelte';
+	import { Edit, TrashCan } from 'carbon-icons-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import DateSection from './DateSection.svelte';
 	import MultipleChoiceSection from './MultipleChoiceSection.svelte';
@@ -24,10 +31,10 @@
 	};
 </script>
 
-<AccordionItem title="Section {index + 1}">
+<AccordionItem title={$builder.title}>
 	<div slot="title" class="title">
 		<div>
-			<h5>Section {index + 1}</h5>
+			<h5>{$builder.title}</h5>
 			<p>{sectionTypeLabel($builder.type)} ({$builder.choices.length} choices)</p>
 		</div>
 	</div>
@@ -56,6 +63,15 @@
 	on:click:button--secondary={closeModal}
 	on:close={closeModal}
 >
+	<TextInput bind:value={$builder.title} labelText="Title" />
+	<TextArea
+		bind:value={$builder.description}
+		labelText="Description"
+		placeholder="Description (optional)"
+	/>
+
+	<br />
+
 	<Dropdown
 		titleText="Section type"
 		bind:selectedId={$builder.type}

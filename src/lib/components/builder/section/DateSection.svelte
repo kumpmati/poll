@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { SectionBuilderStore } from '$lib/stores/builder/section';
 	import { FormGroup, Toggle } from 'carbon-components-svelte';
-	import EditChoice from '../choice/EditChoice.svelte';
+	import ChoiceBuilder from '../choice/ChoiceBuilder.svelte';
 
 	export let builder: SectionBuilderStore<
-		'date',
+		'dates',
 		'daterange',
 		{ limit: boolean; range: { from: string; to: string } }
 	>;
@@ -20,6 +20,6 @@
 	<br />
 
 	{#if $range.data.limit}
-		<EditChoice builder={range} allowedTypes={['date']} />
+		<ChoiceBuilder builder={range} allowedTypes={['date']} />
 	{/if}
 </FormGroup>

@@ -1,38 +1,31 @@
-import type { ChoiceData, SectionOutput } from '$lib/types/poll';
+import type { PollSection } from '$lib/schemas/poll';
 import { nanoid } from 'nanoid';
 import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import { choiceBuilder, type ChoiceBuilderStore } from './choice';
 
-type Input<ST extends string, CT extends string, CD extends ChoiceData> = Omit<
-	SectionOutput<ST, CT, CD>,
-	'choices'
->;
+type Input = Omit<PollSection, 'choices'>;
 
-export type SectionReadableState<
-	ST extends string,
-	CT extends string,
-	CD extends ChoiceData
-> = Input<ST, CT, CD> & { choices: { id: string; builder: ChoiceBuilderStore<CT, CD> }[] };
+export type SectionReadableState = Input & {
+	choices: { id: string; builder: ChoiceBuilderStore }[];
+};
 
-export type SectionBuilderStore<ST extends string, CT extends string, CD extends ChoiceData> = {
-	addChoice: (type: CT, value: CD) => ChoiceBuilderStore<CT, CD>;
-	getChoices: () => ChoiceBuilderStore<CT, CD>[];
+export type SectionBuilderStore = {
+	addChoice: (type: string, value: any) => ChoiceBuilderStore;
+	getChoices: () => ChoiceBuilderStore[];
 	removeChoice: (id: string) => void;
-	build: () => SectionOutput<ST, CT, CD>;
-} & Writable<Input<ST, CT, CD>> &
-	Readable<SectionReadableState<ST, CT, CD>>;
+	build: () => PollSection;
+} & Writable<Input> &
+	Readable<SectionReadableState>;
 
-export const sectionBuilder = <ST extends string, CT extends string, CD extends ChoiceData>(
-	initial?: Input<ST, CT, CD>
-): SectionBuilderStore<ST, CT, CD> => {
-	const state = writable<Input<ST, CT, CD>>(initial);
-	const choices = writable<ChoiceBuilderStore<CT, CD>[]>([]);
+export const sectionBuilder = (initial?: Input): SectionBuilderStore => {
+	const state = writable<Input>(initial);
+	const choices = writable<ChoiceBuilderStore[]>([]);
 
 	/**
 	 * Adds a choice builder to the section.
 	 */
-	const addChoice = (type: CT, value: CD): ChoiceBuilderStore<CT, CD> => {
-		const builder = choiceBuilder<CT, CD>({ id: nanoid(), type, data: value });
+	const addChoice = (type: string, value: any): ChoiceBuilderStore => {
+		const builder = choiceBuilder({ id: nanoid(), type, data: value });
 
 		choices.update((prev) => {
 			prev.push(builder);

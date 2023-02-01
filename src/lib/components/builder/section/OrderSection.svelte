@@ -2,14 +2,14 @@
 	import type { SectionBuilderStore } from '$lib/stores/builder/section';
 	import { Button, FormGroup } from 'carbon-components-svelte';
 	import { Add } from 'carbon-icons-svelte';
-	import EditChoice from '../choice/EditChoice.svelte';
+	import ChoiceBuilder from '../choice/ChoiceBuilder.svelte';
 
 	export let builder: SectionBuilderStore<'date', string, any>;
 </script>
 
 <FormGroup legendText="Choices">
 	{#each $builder.choices as choice (choice.id)}
-		<EditChoice builder={choice.builder} on:delete={(e) => builder.removeChoice(e.detail)} />
+		<ChoiceBuilder builder={choice.builder} on:delete={(e) => builder.removeChoice(e.detail)} />
 	{/each}
 
 	<br />
