@@ -12,3 +12,12 @@ const sectionTypeLabels = {
 export const sectionTypeLabel = (v: keyof typeof sectionTypeLabels): string => {
 	return sectionTypeLabels[v] ?? 'Unknown type';
 };
+
+export const isURL = (val: any): boolean => {
+	try {
+		const url = new URL(val);
+		return url.protocol === 'http:' || url.protocol === 'https:';
+	} catch {
+		return false;
+	}
+};

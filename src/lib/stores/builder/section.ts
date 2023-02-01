@@ -16,6 +16,7 @@ export type SectionReadableState<
 
 export type SectionBuilderStore<ST extends string, CT extends string, CD extends ChoiceData> = {
 	addChoice: (type: CT, value: CD) => ChoiceBuilderStore<CT, CD>;
+	getChoices: () => ChoiceBuilderStore<CT, CD>[];
 	removeChoice: (id: string) => void;
 	build: () => SectionOutput<ST, CT, CD>;
 } & Writable<Input<ST, CT, CD>> &
@@ -54,6 +55,10 @@ export const sectionBuilder = <ST extends string, CT extends string, CD extends 
 		});
 	};
 
+	const getChoices = () => {
+		return get(choices);
+	};
+
 	const builtValue = derived([state, choices], ([$state, $choices]) => {
 		return {
 			...$state,
@@ -68,6 +73,7 @@ export const sectionBuilder = <ST extends string, CT extends string, CD extends 
 
 		addChoice,
 		removeChoice,
+		getChoices,
 		build: () => {
 			const v = get(builtValue);
 

@@ -2,19 +2,13 @@
 	import type { ChoiceBuilderStore } from '$lib/stores/builder/choice';
 	import { DatePicker, DatePickerInput } from 'carbon-components-svelte';
 
-	export let builder: ChoiceBuilderStore<'date', { from: string; to: string }>;
+	export let builder: ChoiceBuilderStore<'date', string>;
 
-	$: if (typeof $builder.data !== 'object') {
-		$builder.data = { from: '', to: '' };
+	$: if (typeof $builder.data !== 'string') {
+		$builder.data = '';
 	}
 </script>
 
-<DatePicker
-	datePickerType="range"
-	bind:valueFrom={$builder.data.from}
-	bind:valueTo={$builder.data.to}
-	dateFormat="Y/m/d"
->
-	<DatePickerInput placeholder="From" />
-	<DatePickerInput placeholder="To" />
+<DatePicker datePickerType="single" bind:value={$builder.data} dateFormat="Y/m/d">
+	<DatePickerInput placeholder="Date" />
 </DatePicker>
