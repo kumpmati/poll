@@ -3,11 +3,7 @@
 	import { FormGroup, Toggle } from 'carbon-components-svelte';
 	import ChoiceBuilder from '../choice/ChoiceBuilder.svelte';
 
-	export let builder: SectionBuilderStore<
-		'dates',
-		'daterange',
-		{ limit: boolean; range: { from: string; to: string } }
-	>;
+	export let builder: SectionBuilderStore;
 
 	const range = builder.addChoice('daterange', { limit: false, range: { from: '', to: '' } });
 </script>

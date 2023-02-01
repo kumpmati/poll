@@ -17,7 +17,7 @@
 	import SingleChoiceSection from './SingleChoiceSection.svelte';
 
 	export let index: number;
-	export let builder: SectionBuilderStore<any, any, any>;
+	export let builder: SectionBuilderStore;
 
 	const dispatch = createEventDispatcher();
 	let modalOpen = false;

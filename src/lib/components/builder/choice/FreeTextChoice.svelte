@@ -2,7 +2,7 @@
 	import type { ChoiceBuilderStore } from '$lib/stores/builder/choice';
 	import { TextInput } from 'carbon-components-svelte';
 
-	export let builder: ChoiceBuilderStore<'freetext', { label: string }>;
+	export let builder: ChoiceBuilderStore;
 
 	$: if (typeof $builder.data !== 'object') {
 		$builder.data = { label: 'Other' };

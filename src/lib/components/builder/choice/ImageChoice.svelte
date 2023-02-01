@@ -3,7 +3,7 @@
 	import { isURL } from '$lib/util';
 	import { TextInput } from 'carbon-components-svelte';
 
-	export let builder: ChoiceBuilderStore<'image', string>;
+	export let builder: ChoiceBuilderStore;
 
 	$: if (typeof $builder.data !== 'string') {
 		$builder.data = '';

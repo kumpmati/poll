@@ -2,7 +2,7 @@
 	import type { ChoiceBuilderStore } from '$lib/stores/builder/choice';
 	import { DatePicker, DatePickerInput } from 'carbon-components-svelte';
 
-	export let builder: ChoiceBuilderStore<'date', string>;
+	export let builder: ChoiceBuilderStore;
 
 	$: if (typeof $builder.data !== 'string') {
 		$builder.data = '';

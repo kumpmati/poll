@@ -4,7 +4,7 @@
 	import { Add } from 'carbon-icons-svelte';
 	import ChoiceBuilder from '../choice/ChoiceBuilder.svelte';
 
-	export let builder: SectionBuilderStore<'singlechoice', 'string' | 'image', any>;
+	export let builder: SectionBuilderStore;
 </script>
 
 <FormGroup legendText="Choices">

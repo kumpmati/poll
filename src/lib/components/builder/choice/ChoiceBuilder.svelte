@@ -1,14 +1,7 @@
 <script lang="ts">
 	import type { ChoiceBuilderStore } from '$lib/stores/builder/choice';
 	import { Button, OverflowMenu, OverflowMenuItem } from 'carbon-components-svelte';
-	import {
-		Calendar,
-		Edit,
-		Image,
-		StringText,
-		TextAlignCenter,
-		TrashCan
-	} from 'carbon-icons-svelte';
+	import { Calendar, Edit, Image, StringText, TrashCan } from 'carbon-icons-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import DateChoice from './DateChoice.svelte';
 	import DateRangeChoice from './DateRangeChoice.svelte';
@@ -16,7 +9,7 @@
 	import ImageChoice from './ImageChoice.svelte';
 	import StringChoice from './StringChoice.svelte';
 
-	export let builder: ChoiceBuilderStore<any, any>;
+	export let builder: ChoiceBuilderStore;
 	export let allowedTypes = ['string', 'date', 'daterange', 'image', 'freetext'];
 
 	const dispatch = createEventDispatcher();
