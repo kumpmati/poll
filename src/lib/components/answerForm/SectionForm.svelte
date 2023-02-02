@@ -10,10 +10,12 @@
 </script>
 
 {#if showMeta}
-	<h2>{section.title}</h2>
-	<p>{section.description}</p>
+	<h3>{section.title}</h3>
 {/if}
 
+<p>{section.description}</p>
+
+<br />
 <br />
 
 {#key section.id}
@@ -27,3 +29,10 @@
 		<DatesForm {section} on:submit />
 	{/if}
 {/key}
+
+<style>
+	p {
+		opacity: 0.6;
+		font-size: 14px;
+	}
+</style>

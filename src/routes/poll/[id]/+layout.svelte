@@ -9,7 +9,5 @@
 		max-width: 40rem;
 		margin-top: 4rem;
 		margin-bottom: 4rem;
-
-		overflow: hidden;
 	}
 </style>

@@ -63,7 +63,7 @@
 	}
 
 	.position {
-		opacity: 0.5;
+		opacity: 0.6;
 		font-size: 12px;
 	}
 
@@ -76,6 +76,6 @@
 	}
 
 	.row:hover .num {
-		opacity: 0.5;
+		opacity: 0.6;
 	}
 </style>

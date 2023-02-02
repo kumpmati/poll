@@ -1,17 +1,20 @@
 <script lang="ts">
 	import type { Poll, PollResponseItem } from '$lib/schemas/poll';
 	import { POLL_FORM_STORE, type PollFormStore } from '$lib/stores/form/pollForm';
-	import { Button } from 'carbon-components-svelte';
+	import { Button, ProgressBar } from 'carbon-components-svelte';
 	import { Result } from 'carbon-icons-svelte';
-	import { setContext } from 'svelte';
+	import { createEventDispatcher, setContext } from 'svelte';
 	import SectionForm from './SectionForm.svelte';
 
 	export let poll: Poll;
 	export let store: PollFormStore;
+	const dispatch = createEventDispatcher();
 
 	setContext(POLL_FORM_STORE, store);
 
 	$: section = poll.sections[$store.currentSection];
+	$: progress = $store.currentSection / poll.sections.length;
+	let completed = false;
 
 	const handleSubmit = async (e: CustomEvent<PollResponseItem[]>) => {
 		const isLast = $store.currentSection >= poll.sections.length - 1;
@@ -19,8 +22,8 @@
 		store.answerSection(section.id, e.detail);
 
 		if (isLast) {
-			const success = await store.submitPoll();
-			console.log({ success });
+			dispatch('submit');
+			completed = true;
 		}
 	};
 </script>
@@ -28,8 +31,22 @@
 <h1>{poll.meta.title}</h1>
 <p>{poll.meta.description}</p>
 
-<br />
+{#if poll.sections.length > 1}
+	<br />
+	<ProgressBar
+		helperText="Section {$store.currentSection + 1}/{poll.sections.length}"
+		value={completed ? 100 : progress * 100}
+	/>
+	<br />
+	<br />
+{/if}
 
 <SectionForm {section} showMeta={poll.sections.length > 1} on:submit={handleSubmit} />
 
-<Button kind="secondary" href="/poll/{poll.id}/results" icon={Result}>View results</Button>
+<Button kind="ghost" href="/poll/{poll.id}/responses" icon={Result}>View responses</Button>
+
+<style>
+	p {
+		opacity: 0.6;
+	}
+</style>

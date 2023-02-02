@@ -99,7 +99,7 @@
 <style>
 	p {
 		font-size: 12px;
-		opacity: 0.5;
+		opacity: 0.6;
 	}
 
 	.title {

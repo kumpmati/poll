@@ -7,6 +7,10 @@
 	export let data: PageData;
 </script>
 
+<svelte:head>
+	<title>{data.poll.meta.title} - Responses</title>
+</svelte:head>
+
 <ResultViewer poll={data.poll} statistics={data.statistics} />
 
 <Button href="/poll/{data.poll.id}" icon={ArrowLeft}>Back to poll</Button>
