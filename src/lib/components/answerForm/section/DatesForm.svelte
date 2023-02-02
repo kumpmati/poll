@@ -1,13 +1,15 @@
 <script lang="ts">
 	import type { PollResponseItem, PollSection } from '$lib/schemas/poll';
+	import { POLL_FORM_STORE, type PollFormStore } from '$lib/stores/form/pollForm';
 	import { hasDuplicateInArray, hasDuplicates } from '$lib/utils';
 	import { Button, DatePicker, DatePickerInput } from 'carbon-components-svelte';
 	import { Add, Checkmark, TrashCan } from 'carbon-icons-svelte';
 	import { nanoid } from 'nanoid';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, getContext } from 'svelte';
 
 	export let section: PollSection;
 
+	const store = getContext<PollFormStore>(POLL_FORM_STORE);
 	const dispatch = createEventDispatcher<{ submit: PollResponseItem[] }>();
 
 	const { limit, range } = section.choices[0].data;
@@ -71,7 +73,9 @@
 
 <br />
 
-<Button on:click={handleSubmit} disabled={duplicates || noItems} icon={Checkmark}>Confirm</Button>
+<Button on:click={handleSubmit} disabled={duplicates || noItems || $store.loading} icon={Checkmark}>
+	Confirm
+</Button>
 
 <style>
 	div {
