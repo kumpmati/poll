@@ -24,8 +24,10 @@
 		<span class="row">
 			<p class="num">({num})</p>
 
-			<li class="item" style:width="{width * 100}%">
+			<li class="item">
 				<p class="position">#{index + 1}</p>
+
+				<div class="bar" style:width="{width * 100}%" />
 
 				<ChoiceRenderer
 					value={choice.data}
@@ -56,10 +58,22 @@
 		padding: 8px;
 		display: flex;
 		align-items: center;
-		background-color: rgb(50, 50, 50);
 		gap: 8px;
-		border-radius: 2px;
 		min-height: 50px;
+		width: 100%;
+	}
+
+	.bar {
+		display: block;
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		background-color: rgb(50, 50, 50);
+		border-radius: 2px;
+		z-index: -1;
+		padding: 2px;
+		box-sizing: border-box;
 	}
 
 	.position {

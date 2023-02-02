@@ -15,11 +15,20 @@
 {:else if type === 'date'}
 	<p>{new Date(value).toLocaleDateString('fi')}</p>
 {:else if type === 'image'}
-	<p>Image <span class="subtle">(#{imageLabel})</span></p>
+	<span class="img">
+		<p>Image <span class="subtle">(#{imageLabel})</span></p>
 
-	<Button size="small" kind="ghost" on:click={() => (open = !open)} icon={open ? Subtract : Add}>
-		{open ? 'Hide' : 'Show'}
-	</Button>
+		<span class="button">
+			<Button
+				size="small"
+				kind="ghost"
+				on:click={() => (open = !open)}
+				icon={open ? Subtract : Add}
+			>
+				{open ? 'Hide' : 'Show'}
+			</Button>
+		</span>
+	</span>
 {/if}
 
 {#if type === 'image'}
@@ -36,6 +45,13 @@
 	.subtle {
 		font-size: 12px;
 		opacity: 0.6;
+	}
+
+	.img {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
 	}
 
 	img {

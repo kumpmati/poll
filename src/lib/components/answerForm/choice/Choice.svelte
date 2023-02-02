@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PollChoice, PollResponseItem } from '$lib/schemas/poll';
-	import { ClickableTile } from 'carbon-components-svelte';
+	import { ClickableTile, Modal } from 'carbon-components-svelte';
 	import { CheckmarkFilled } from 'carbon-icons-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -20,6 +20,9 @@
 		update: PollResponseItem;
 		select: never;
 	}>();
+
+	let open = false;
+	let imageLabel = choice.id.substring(0, 4).toUpperCase();
 </script>
 
 <ClickableTile
@@ -34,7 +37,7 @@
 		{:else if choice.type === 'daterange'}
 			<DateRangeChoice {choice} />
 		{:else if choice.type === 'image'}
-			<ImageChoice {choice} />
+			<ImageChoice {imageLabel} bind:open />
 		{:else if choice.type === 'freetext'}
 			<FreeTextChoice {choice} bind:value={userData} />
 		{:else}
@@ -49,6 +52,12 @@
 	</span>
 </ClickableTile>
 
+{#if open && choice.type === 'image'}
+	<Modal bind:open passiveModal modalHeading="Image (#{imageLabel})" size="sm">
+		<img loading="lazy" src={choice.data} alt={null} />
+	</Modal>
+{/if}
+
 <br />
 
 <style>
@@ -62,5 +71,11 @@
 		position: absolute;
 		right: 0;
 		top: 0;
+	}
+
+	img {
+		width: 99%;
+		height: 98%;
+		object-fit: contain;
 	}
 </style>
