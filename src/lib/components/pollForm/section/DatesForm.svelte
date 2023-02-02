@@ -1,26 +1,25 @@
 <script lang="ts">
-	import type { PollSection } from '$lib/schemas/poll';
+	import type { PollResponseItem, PollSection } from '$lib/schemas/poll';
 	import { hasDuplicateInArray, hasDuplicates } from '$lib/util';
 	import { Button, DatePicker, DatePickerInput } from 'carbon-components-svelte';
 	import { Add, Checkmark, TrashCan } from 'carbon-icons-svelte';
+	import { nanoid } from 'nanoid';
 	import { createEventDispatcher } from 'svelte';
 
 	export let section: PollSection;
 
-	const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher<{ submit: PollResponseItem[] }>();
 
 	const { limit, range } = section.choices[0].data;
 
-	let selected: string[] = [];
+	let selected: PollResponseItem[] = [];
 
 	const handleSubmit = () => {
 		dispatch('submit', selected);
 	};
 
-	$: console.log(selected);
-
 	const handleAddDate = () => {
-		selected.push('');
+		selected.push({ id: nanoid(), userData: '' });
 		selected = selected;
 	};
 
@@ -34,20 +33,24 @@
 </script>
 
 <div>
-	{#each selected as date, index}
-		{@const dup = hasDuplicateInArray(selected, date)}
+	{#each selected as item, index}
+		{@const dup = hasDuplicateInArray(selected, item)}
 		<span>
 			<DatePicker
 				flatpickrProps={{ static: false }}
 				datePickerType="single"
-				bind:value={date}
+				bind:value={item.userData}
 				dateFormat="Y-m-d"
 				minDate={limit ? range.from : undefined}
 				maxDate={limit ? range.to : undefined}
 			>
 				<DatePickerInput
-					invalid={dup || date === ''}
-					invalidText={dup ? "Can't enter same date twice" : date === '' ? 'Choose a date' : ''}
+					invalid={dup || item.userData === ''}
+					invalidText={dup
+						? "Can't enter same date twice"
+						: item.userData === ''
+						? 'Choose a date'
+						: ''}
 				/>
 			</DatePicker>
 

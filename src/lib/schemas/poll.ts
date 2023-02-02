@@ -30,13 +30,19 @@ export type PollChoice = z.infer<typeof pollChoiceSchema>;
 export type PollSection = z.infer<typeof pollSectionSchema>;
 export type Poll = z.infer<typeof pollSchema>;
 
-export const pollResponseSchema = z.object({
+export const pollResponseItemSchema = z.object({
 	id: z.string(),
-	sectionId: z.string(),
-	timestamp: z.number().min(0),
-	data: z.array(z.string()) // option ids
+	userData: z.any()
 });
 
+export const pollResponseSchema = z.object({
+	id: z.string(),
+
+	// key is the section ID, value is the
+	sectionAnswers: z.record(z.array(pollResponseItemSchema))
+});
+
+export type PollResponseItem = z.infer<typeof pollResponseItemSchema>;
 export type PollResponse = z.infer<typeof pollResponseSchema>;
 
 export const pollResultsSchema = z.object({

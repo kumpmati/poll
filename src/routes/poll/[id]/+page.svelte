@@ -1,6 +1,5 @@
 <script lang="ts">
 	import PollForm from '$lib/components/pollForm/PollForm.svelte';
-	import type { PollSection } from '$lib/schemas/poll';
 	import { pollFormStore } from '$lib/stores/form/pollForm';
 	import type { PageData } from './$types';
 

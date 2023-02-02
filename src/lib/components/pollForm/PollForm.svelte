@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Poll } from '$lib/schemas/poll';
+	import type { Poll, PollResponseItem } from '$lib/schemas/poll';
 	import { POLL_FORM_STORE, type PollFormStore } from '$lib/stores/form/pollForm';
 	import { setContext } from 'svelte';
 	import SectionForm from './SectionForm.svelte';
@@ -11,13 +11,13 @@
 
 	$: section = poll.sections[$store.currentSection];
 
-	const handleSubmit = async (e: CustomEvent) => {
+	const handleSubmit = async (e: CustomEvent<PollResponseItem[]>) => {
 		const isLast = $store.currentSection >= poll.sections.length - 1;
 
 		store.answerSection(section.id, e.detail);
 
 		if (isLast) {
-			const success = await store.submitPollAnswer();
+			const success = await store.submitPoll();
 			console.log({ success });
 		}
 	};

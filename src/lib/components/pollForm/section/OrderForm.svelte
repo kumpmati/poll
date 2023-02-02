@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PollChoice, PollSection } from '$lib/schemas/poll';
+	import type { PollResponseItem, PollSection } from '$lib/schemas/poll';
 	import { Button } from 'carbon-components-svelte';
 	import { Checkmark } from 'carbon-icons-svelte';
 	import { createEventDispatcher, getContext } from 'svelte';
@@ -12,32 +12,33 @@
 	export let section: PollSection;
 
 	const store = getContext<PollFormStore>(POLL_FORM_STORE);
-	const dispatch = createEventDispatcher();
-	let selected = copy(section.choices);
-
-	const handleSubmit = () => {
-		dispatch(
-			'submit',
-			selected.map((s) => s.id)
-		);
-	};
+	const dispatch = createEventDispatcher<{ submit: PollResponseItem[] }>();
 
 	let dirty = false;
+	let choices = copy(section.choices).map((c) => ({ ...c, userData: null }));
+
+	const handleSubmit = () => {
+		const items: PollResponseItem[] = choices.map((c) => ({ id: c.id, userData: c.userData }));
+		dispatch('submit', items);
+	};
 </script>
 
 <div
-	use:dndzone={{ items: selected }}
-	on:consider={(e) => (selected = e.detail.items)}
+	use:dndzone={{ items: choices }}
+	on:consider={(e) => {
+		choices = e.detail.items;
+		dirty = true;
+	}}
 	on:finalize={(e) => {
-		selected = e.detail.items;
+		choices = e.detail.items;
 		dirty = true;
 	}}
 >
-	{#each selected as choice, index (choice.id)}
+	{#each choices as choice, index (choice.id)}
 		<span animate:flip={{ duration: 200 }}>
-			<p>{index + 1}</p>
+			<p>#{index + 1}</p>
 
-			<Choice {choice} selected={false} />
+			<Choice bind:userData={choice.userData} {choice} selected={false} />
 		</span>
 	{/each}
 </div>
@@ -47,6 +48,8 @@
 <style>
 	span {
 		display: flex;
+		align-items: center;
+		gap: 16px;
 		width: 100%;
 	}
 </style>

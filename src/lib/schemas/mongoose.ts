@@ -26,9 +26,7 @@ export const PollModel = mongoose.models.poll ?? mongoose.model('poll', pollData
 export const pollResponseDatabaseSchema = new Schema<PollResponse>(
 	{
 		id: String,
-		sectionId: String,
-		timestamp: Number,
-		data: [String]
+		sectionAnswers: [Schema.Types.Mixed]
 	},
 	{
 		toJSON: {

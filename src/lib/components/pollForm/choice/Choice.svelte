@@ -1,25 +1,44 @@
 <script lang="ts">
-	import type { PollChoice } from '$lib/schemas/poll';
+	import type { PollChoice, PollResponseItem } from '$lib/schemas/poll';
 	import { ClickableTile } from 'carbon-components-svelte';
 	import { CheckmarkFilled } from 'carbon-icons-svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import DateChoice from './DateChoice.svelte';
+	import DateRangeChoice from './DateRangeChoice.svelte';
+	import FreeTextChoice from './FreeTextChoice.svelte';
+	import ImageChoice from './ImageChoice.svelte';
 	import StringChoice from './StringChoice.svelte';
 
 	export let choice: PollChoice;
+
+	// arbitrary data provided by the user when answering the poll
+	export let userData: any;
 	export let selected: boolean;
+
+	const dispatch = createEventDispatcher<{
+		update: PollResponseItem;
+		select: never;
+	}>();
 </script>
 
 <ClickableTile
-	on:click
+	on:click={() => dispatch('select')}
 	style="border: 1px solid transparent; border-color: {selected ? '#fff' : 'transparent'}"
 >
 	<span class="content">
 		{#if choice.type === 'string'}
 			<StringChoice {choice} />
 		{:else if choice.type === 'date'}
-			<StringChoice {choice} />
+			<DateChoice {choice} />
+		{:else if choice.type === 'daterange'}
+			<DateRangeChoice {choice} />
+		{:else if choice.type === 'image'}
+			<ImageChoice {choice} />
+		{:else if choice.type === 'freetext'}
+			<FreeTextChoice {choice} bind:value={userData} />
 		{:else}
-			unknown choice
+			Unknown choice type 🙁
 		{/if}
 
 		{#if selected}

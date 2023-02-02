@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PollSection } from '$lib/schemas/poll';
+	import type { PollResponseItem, PollSection } from '$lib/schemas/poll';
 	import { POLL_FORM_STORE, type PollFormStore } from '$lib/stores/form/pollForm';
 	import { Button } from 'carbon-components-svelte';
 	import { Checkmark } from 'carbon-icons-svelte';
@@ -9,22 +9,31 @@
 	export let section: PollSection;
 
 	const store = getContext<PollFormStore>(POLL_FORM_STORE);
-	const dispatch = createEventDispatcher();
-	let selected: string | null = null;
+	const dispatch = createEventDispatcher<{ submit: PollResponseItem[] }>();
+
+	let selectedId: string | null;
+	let choices = section.choices.map((c) => ({ ...c, userData: null }));
 
 	const handleSelect = (id: string) => {
-		selected = id === selected ? null : id;
+		selectedId = id !== selectedId ? id : null;
 	};
 
 	const handleSubmit = () => {
-		dispatch('submit', [selected]);
+		const selectedChoice = choices.find((c) => c.id === selectedId);
+
+		if (selectedId && selectedChoice) dispatch('submit', [selectedChoice]);
 	};
 </script>
 
-{#each section.choices as choice (choice.id)}
-	<Choice {choice} selected={selected === choice.id} on:click={() => handleSelect(choice.id)} />
+{#each choices as choice (choice.id)}
+	<Choice
+		{choice}
+		bind:userData={choice.userData}
+		selected={selectedId === choice.id}
+		on:select={() => handleSelect(choice.id)}
+	/>
 {/each}
 
-<Button on:click={handleSubmit} disabled={!selected || $store.loading} icon={Checkmark}>
+<Button on:click={handleSubmit} disabled={!selectedId || $store.loading} icon={Checkmark}>
 	Submit
 </Button>

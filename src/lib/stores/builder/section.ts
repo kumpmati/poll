@@ -1,4 +1,4 @@
-import type { PollSection } from '$lib/schemas/poll';
+import type { PollChoice, PollSection } from '$lib/schemas/poll';
 import { nanoid } from 'nanoid';
 import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import { choiceBuilder, type ChoiceBuilderStore } from './choice';
@@ -10,7 +10,7 @@ export type SectionReadableState = Input & {
 };
 
 export type SectionBuilderStore = {
-	addChoice: (type: string, value: any) => ChoiceBuilderStore;
+	addChoice: (type: PollChoice['type'], value: any) => ChoiceBuilderStore;
 	getChoices: () => ChoiceBuilderStore[];
 	removeChoice: (id: string) => void;
 	build: () => PollSection;
@@ -24,7 +24,7 @@ export const sectionBuilder = (initial?: Input): SectionBuilderStore => {
 	/**
 	 * Adds a choice builder to the section.
 	 */
-	const addChoice = (type: string, value: any): ChoiceBuilderStore => {
+	const addChoice = (type: PollChoice['type'], value: any): ChoiceBuilderStore => {
 		const builder = choiceBuilder({ id: nanoid(), type, data: value });
 
 		choices.update((prev) => {
