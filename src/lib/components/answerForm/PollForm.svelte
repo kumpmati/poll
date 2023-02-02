@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Poll, PollResponseItem } from '$lib/schemas/poll';
 	import { POLL_FORM_STORE, type PollFormStore } from '$lib/stores/form/pollForm';
+	import { Button } from 'carbon-components-svelte';
+	import { Result } from 'carbon-icons-svelte';
 	import { setContext } from 'svelte';
 	import SectionForm from './SectionForm.svelte';
 
@@ -29,3 +31,5 @@
 <br />
 
 <SectionForm {section} showMeta={poll.sections.length > 1} on:submit={handleSubmit} />
+
+<Button kind="secondary" href="/poll/{poll.id}/results" icon={Result}>View results</Button>

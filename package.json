@@ -19,6 +19,7 @@
 		"@sveltejs/kit": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"caccu": "^0.3.0",
 		"carbon-components-svelte": "^0.72.1",
 		"carbon-icons-svelte": "^11.4.0",
 		"eslint": "^8.28.0",

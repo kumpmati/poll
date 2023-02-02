@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { SectionBuilderStore } from '$lib/stores/builder/section';
-	import { sectionTypeLabel } from '$lib/util';
+	import { sectionTypeLabel } from '$lib/utils';
 	import {
 		AccordionItem,
 		Button,

@@ -37,6 +37,7 @@ export const pollResponseItemSchema = z.object({
 
 export const pollResponseSchema = z.object({
 	id: z.string(),
+	pollId: z.string(),
 
 	// key is the section ID, value is the
 	sectionAnswers: z.record(z.array(pollResponseItemSchema))

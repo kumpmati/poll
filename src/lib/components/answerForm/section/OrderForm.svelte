@@ -5,7 +5,7 @@
 	import { createEventDispatcher, getContext } from 'svelte';
 	import Choice from '../choice/Choice.svelte';
 	import { dndzone } from 'svelte-dnd-action';
-	import { copy } from '$lib/util';
+	import { copy } from '$lib/utils';
 	import { flip } from 'svelte/animate';
 	import { POLL_FORM_STORE, type PollFormStore } from '$lib/stores/form/pollForm';
 
@@ -43,7 +43,9 @@
 	{/each}
 </div>
 
-<Button on:click={handleSubmit} disabled={!dirty || $store.loading} icon={Checkmark}>Submit</Button>
+<Button on:click={handleSubmit} disabled={!dirty || $store.loading} icon={Checkmark}>
+	Confirm
+</Button>
 
 <style>
 	span {

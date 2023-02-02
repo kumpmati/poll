@@ -35,5 +35,5 @@
 {/each}
 
 <Button on:click={handleSubmit} disabled={!selectedId || $store.loading} icon={Checkmark}>
-	Submit
+	Confirm
 </Button>

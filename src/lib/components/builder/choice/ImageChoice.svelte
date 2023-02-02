@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ChoiceBuilderStore } from '$lib/stores/builder/choice';
-	import { isURL } from '$lib/util';
+	import { isURL } from '$lib/utils';
 	import { TextInput } from 'carbon-components-svelte';
 
 	export let builder: ChoiceBuilderStore;

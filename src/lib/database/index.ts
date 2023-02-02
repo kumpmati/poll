@@ -27,3 +27,7 @@ export const getPollById = async (id: string): Promise<Poll | null> => {
 export const createPollResponse = async (res: PollResponse) => {
 	return new PollResponseModel(res).save();
 };
+
+export const getPollResponses = async (pollId: string): Promise<PollResponse[]> => {
+	return (await PollResponseModel.find({ pollId }).exec()).map((d) => d.toObject());
+};

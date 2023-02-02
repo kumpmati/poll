@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PollResponseItem, PollSection } from '$lib/schemas/poll';
-	import { hasDuplicateInArray, hasDuplicates } from '$lib/util';
+	import { hasDuplicateInArray, hasDuplicates } from '$lib/utils';
 	import { Button, DatePicker, DatePickerInput } from 'carbon-components-svelte';
 	import { Add, Checkmark, TrashCan } from 'carbon-icons-svelte';
 	import { nanoid } from 'nanoid';
@@ -71,7 +71,7 @@
 
 <br />
 
-<Button on:click={handleSubmit} disabled={duplicates || noItems} icon={Checkmark}>Submit</Button>
+<Button on:click={handleSubmit} disabled={duplicates || noItems} icon={Checkmark}>Confirm</Button>
 
 <style>
 	div {

@@ -1,10 +1,11 @@
 import type { Poll, PollResponse, PollResponseItem } from '$lib/schemas/poll';
+import { nanoid } from 'nanoid';
 import { get, writable, type Readable } from 'svelte/store';
 
 export const POLL_FORM_STORE = Symbol('submit form');
 
 type PollFormState = {
-	id: string;
+	pollId: string;
 	currentSection: number;
 	loading: boolean;
 	sectionAnswers: Record<string, PollResponseItem[]>;
@@ -17,7 +18,7 @@ export type PollFormStore = Readable<PollFormState> & {
 
 export const pollFormStore = (poll: Poll): PollFormStore => {
 	const state = writable<PollFormState>({
-		id: poll.id,
+		pollId: poll.id,
 		currentSection: 0,
 		loading: false,
 		sectionAnswers: {}
@@ -30,10 +31,11 @@ export const pollFormStore = (poll: Poll): PollFormStore => {
 		});
 
 	const submitPoll = async () => {
-		const stateValue = get(state) satisfies PollResponse;
+		const stateValue = get(state);
 
 		const r: PollResponse = {
-			id: stateValue.id,
+			id: nanoid(),
+			pollId: stateValue.pollId,
 			sectionAnswers: stateValue.sectionAnswers
 		};
 
