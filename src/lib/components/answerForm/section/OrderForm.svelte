@@ -43,6 +43,8 @@
 	{/each}
 </div>
 
+<br />
+
 <Button on:click={handleSubmit} disabled={!dirty || $store.loading} icon={Checkmark}>
 	Confirm
 </Button>
@@ -51,7 +53,9 @@
 	span {
 		display: flex;
 		align-items: center;
+		justify-content: stretch;
 		gap: 16px;
 		width: 100%;
+		margin-bottom: 16px;
 	}
 </style>

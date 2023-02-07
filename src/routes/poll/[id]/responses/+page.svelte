@@ -13,4 +13,6 @@
 
 <ResultViewer poll={data.poll} statistics={data.statistics} />
 
+<br />
+<br />
 <Button href="/poll/{data.poll.id}" icon={ArrowLeft}>Back to poll</Button>

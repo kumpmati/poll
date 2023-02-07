@@ -27,7 +27,9 @@
 
 <ClickableTile
 	on:click={() => dispatch('select')}
-	style="border: 1px solid transparent; border-color: {selected ? '#fff' : 'transparent'}"
+	style="width: 100%; border: 1px solid transparent; border-color: {selected
+		? '#fff'
+		: 'transparent'}"
 >
 	<span class="content">
 		{#if choice.type === 'string'}

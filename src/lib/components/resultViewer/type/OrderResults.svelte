@@ -7,24 +7,24 @@
 
 	export let statistics: PollStatistics;
 
-	const max = Math.max(...Object.values(statistics.choiceAnswerIndexTotal));
+	const biggestValue = Math.max(...Object.values(statistics.choiceAnswerIndexTotal)) ?? 1;
 
-	const sortedByAscending = section.choices.sort((a, b) => {
+	const sortedByDescending = section.choices.sort((a, b) => {
 		const amountA = statistics.choiceAnswerIndexTotal[a.id];
 		const amountB = statistics.choiceAnswerIndexTotal[b.id];
 
-		return amountA - amountB;
+		return amountB - amountA;
 	});
 </script>
 
 <ul>
-	{#each sortedByAscending as choice, index (choice.id)}
+	{#each sortedByDescending as choice, index (choice.id)}
 		{@const num = statistics.choiceAnswerIndexTotal[choice.id] ?? 0}
 
 		<span class="row">
-			<p class="num">({max - num})</p>
+			<p class="num">({num})</p>
 
-			<li class="item" style:width="{((max - num) / max) * 100}%">
+			<li class="item" style:width="{(num / biggestValue) * 100}%">
 				<p class="position">#{index + 1}</p>
 
 				<ChoiceRenderer

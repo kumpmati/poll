@@ -12,7 +12,8 @@
 	let open = false;
 </script>
 
-<h1>Responses</h1>
+<h1>Results</h1>
+<p>{statistics.totalAnswers} responses</p>
 
 <br />
 <br />
@@ -42,6 +43,8 @@
 						<h4>{section.title}</h4>
 						<p>{sectionTypeLabel(section.type)}</p>
 					</svelte:fragment>
+
+					<br />
 
 					<SectionResultsViewer {section} {statistics} />
 				</AccordionItem>

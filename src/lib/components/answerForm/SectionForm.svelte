@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PollSection } from '$lib/schemas/poll';
+	import { sectionTypeLabel } from '$lib/utils';
 	import DatesForm from './section/DatesForm.svelte';
 	import MultipleChoiceForm from './section/MultipleChoiceForm.svelte';
 	import OrderForm from './section/OrderForm.svelte';
@@ -14,6 +15,10 @@
 {/if}
 
 <p>{section.description}</p>
+<br />
+<br />
+
+<p>{sectionTypeLabel(section.type)}</p>
 
 <br />
 <br />
