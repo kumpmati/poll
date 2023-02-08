@@ -37,7 +37,7 @@ export const calculateStatistics = (poll: Poll, responses: PollResponse[]): Poll
 				stats.answersPerChoice[sa.id] += 1;
 
 				stats.choiceAnswerIndexTotal[sa.id] ||= 0;
-				stats.choiceAnswerIndexTotal[sa.id] += section.choices.length - i;
+				stats.choiceAnswerIndexTotal[sa.id] += (section.choices.length - i) * 1.5;
 
 				if (section.type === 'dates' && isDateString(sa.userData)) {
 					stats.numDates[sa.userData] ||= 0;

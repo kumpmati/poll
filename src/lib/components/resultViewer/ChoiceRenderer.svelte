@@ -52,7 +52,7 @@
 
 	.thumbnail {
 		height: 4rem;
-		max-width: 4rem;
+		max-width: 6rem;
 		object-fit: contain;
 	}
 
