@@ -22,10 +22,17 @@
 		{@const num = statistics.choiceAnswerIndexTotal[choice.id] ?? 0}
 
 		<span class="row">
-			<p class="num">({num})</p>
+			<p class="num-wrapper">
+				<span class="num">
+					({num})
+				</span>
+				<span class="position">
+					#{index + 1}
+				</span>
+			</p>
 
-			<li class="item" style:width="{(num / biggestValue) * 100}%">
-				<p class="position">#{index + 1}</p>
+			<li class="item">
+				<div class="bar" style:width="{(num / biggestValue) * 100}%" />
 
 				<ChoiceRenderer
 					value={choice.data}
@@ -45,6 +52,12 @@
 		gap: 8px;
 	}
 
+	@media screen and (max-width: 700px) {
+		ul {
+			padding-left: 16px;
+		}
+	}
+
 	.row {
 		position: relative;
 		display: flex;
@@ -56,26 +69,47 @@
 		padding: 8px;
 		display: flex;
 		align-items: center;
-		background-color: rgb(50, 50, 50);
 		gap: 8px;
-		border-radius: 2px;
-		min-height: 50px;
+		width: 100%;
 	}
 
-	.position {
+	.bar {
+		left: 0;
+		position: absolute;
+		background-color: rgb(50, 50, 50);
+		padding: 8px;
+		border-radius: 3px;
+		height: 100%;
+		z-index: -1;
+	}
+
+	.num-wrapper {
 		opacity: 0.6;
 		font-size: 12px;
+		margin-right: 8px;
 	}
 
-	.num {
+	.num,
+	.position {
+		width: 3ch;
 		position: absolute;
-		left: -4ch;
-
-		opacity: 0;
-		font-size: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		left: -3ch;
+		text-align: right;
 	}
 
 	.row:hover .num {
-		opacity: 0.6;
+		display: block;
+	}
+	.row:not(:hover) .num {
+		display: none;
+	}
+
+	.row:hover .position {
+		display: none;
+	}
+	.row:not(:hover) .position {
+		display: block;
 	}
 </style>

@@ -15,8 +15,11 @@
 {:else if type === 'date'}
 	<p>{new Date(value).toLocaleDateString('fi')}</p>
 {:else if type === 'image'}
-	<span class="img">
-		<p>Image <span class="subtle">(#{imageLabel})</span></p>
+	<span class="img-container">
+		<span class="row">
+			<img class="thumbnail" src={value} alt="#{imageLabel}" />
+			<p><span class="subtle">#{imageLabel}</span></p>
+		</span>
 
 		<span class="button">
 			<Button
@@ -25,7 +28,7 @@
 				on:click={() => (open = !open)}
 				icon={open ? Subtract : Add}
 			>
-				{open ? 'Hide' : 'Show'}
+				{open ? 'Hide original' : 'Show original'}
 			</Button>
 		</span>
 	</span>
@@ -33,7 +36,7 @@
 
 {#if type === 'image'}
 	<Modal bind:open passiveModal modalHeading="Image ({imageLabel})" size="sm">
-		<img src={value} alt={null} />
+		<img class="full-img" src={value} alt={null} />
 	</Modal>
 {/if}
 
@@ -47,14 +50,28 @@
 		opacity: 0.6;
 	}
 
-	.img {
+	.thumbnail {
+		height: 4rem;
+		max-width: 4rem;
+		object-fit: contain;
+	}
+
+	.img-container {
 		display: flex;
 		align-items: center;
 		gap: 8px;
 		width: 100%;
 	}
 
-	img {
+	.row {
+		display: flex;
+		flex-direction: row;
+		gap: 16px;
+		align-items: center;
+		margin-right: auto;
+	}
+
+	.full-img {
 		width: 99%;
 		height: 99%;
 		object-fit: contain;

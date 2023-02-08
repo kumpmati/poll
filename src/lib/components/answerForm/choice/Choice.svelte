@@ -39,7 +39,7 @@
 		{:else if choice.type === 'daterange'}
 			<DateRangeChoice {choice} />
 		{:else if choice.type === 'image'}
-			<ImageChoice {imageLabel} bind:open />
+			<ImageChoice {imageLabel} {choice} bind:open />
 		{:else if choice.type === 'freetext'}
 			<FreeTextChoice {choice} bind:value={userData} />
 		{:else}
