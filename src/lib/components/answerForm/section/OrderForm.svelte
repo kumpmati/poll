@@ -24,7 +24,7 @@
 </script>
 
 <div
-	use:dndzone={{ items: choices }}
+	use:dndzone={{ items: choices, dropTargetStyle: { outline: 'none' } }}
 	on:consider={(e) => {
 		choices = e.detail.items;
 		dirty = true;
